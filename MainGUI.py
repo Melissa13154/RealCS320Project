@@ -4,6 +4,8 @@ from tkinter import PhotoImage
 
 backgroundColor = "#D1FFB0"
 
+TK_SILENCE_DEPRECATION=1
+
 class MainFrame:
     def __init__(self):
         self.root = tk.Tk() #creates main root
@@ -15,7 +17,7 @@ class MainFrame:
         #TODO: figure out how to get fill image to show
         self.image1 = Canvas(self.root, width =350, height=350)
         self.image1.place(relx=.5, rely=.4, anchor="center")
-        self.photo1 = PhotoImage(file='Images/Clock2.png')
+        self.photo1 = PhotoImage(file='Images/Clock2.gif')
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
 
