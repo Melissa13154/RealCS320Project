@@ -21,13 +21,22 @@ class StartButton:
 
     #changes text back and forth each click (kind of scuffed but it works)
     def handleMouseClick(self):
+        now = datetime.now()    # Not sure if this is the right place to put this
+        
         self.clicks = self.clicks+1
 
         if(self.clicks%2 != 0):
             self.button.config(text = "Stop")
+            stopTimeAsString = 0
+            stopTimeAsString = now.strftime("%H%M") # Attempting to capture stop time when "stop" is clicked - LPC
+            stopTime = int(stopTimeAsString)
+
+            if stopTime != 0:
+                timeElapsed = (stopTime - startTime) # Might actually need to convert these from strings to ints? - LPC
+                # timer.label = timeElapsed TODO: Change label to show time elapsed rather than 00:00
+
         else:
             self.button.config(text = "Start")
-
             
 
 class TimerTimeOptions:
@@ -43,6 +52,7 @@ class TimerTimeOptions:
 
         self.menu = tk.OptionMenu(self.root, tk.StringVar(self.root), self.timeOptions[0], *self.timeOptions)
         self.menu.pack() #just throwing it in for now
+
 
 
 
