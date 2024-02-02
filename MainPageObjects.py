@@ -28,8 +28,9 @@ class StartButton:
 
         if((self.clicks)%2 != 0):
             self.button.config(text = "Stop")
-            stopTime = 0
-            stopTime = now.strftime("%H%M") # Attempting to capture stop time when "stop" is clicked - LPC
+            stopTimeAsString = 0
+            stopTimeAsString = now.strftime("%H%M") # Attempting to capture stop time when "stop" is clicked - LPC
+            stopTime = int(stopTimeAsString)
 
             if stopTime != 0:
                 timeElapsed = (stopTime - startTime) # Might actually need to convert these from strings to ints? - LPC
@@ -37,8 +38,8 @@ class StartButton:
 
         else:
             self.button.config(text = "Start")
-            startTime = now.strftime("%H%M") # Attempting to capture the start time when "start" is clicked - LPC
-
+            startTimeAsString = now.strftime("%H%M") # Attempting to capture the start time when "start" is clicked - LPC
+            startTime = int(startTimeAsString)
 
 class Timer:
     def __init__(self, root):

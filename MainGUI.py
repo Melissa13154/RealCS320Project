@@ -59,7 +59,7 @@ timer = Timer(main.root)
 startButton = StartButton(main.root)
 
 
-main.root.mainloop() # TODO: What does this do? -LPC
+main.root.mainloop() 
 
 
 
