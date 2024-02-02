@@ -3,6 +3,7 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 from datetime import datetime
 
+
 backgroundColor = "#D1FFB0"
 
 class StartingLabel:
@@ -22,8 +23,7 @@ class StartButton:
     #changes text back and forth each click (kind of scuffed but it works)
     def handleMouseClick(self):
         now = datetime.now()    # Not sure if this is the right place to put this
-                                # Use now() function to get datatime obj containing date and time - LPC
-
+        
         self.clicks = self.clicks+1
 
         if((self.clicks)%2 != 0):
