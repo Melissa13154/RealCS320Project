@@ -1,25 +1,9 @@
 import tkinter as tk
 from tkinter import Canvas
 from tkinter import PhotoImage
+from datetime import datetime
 
 backgroundColor = "#D1FFB0"
-
-TK_SILENCE_DEPRECATION=1
-
-class MainFrame:
-    def __init__(self):
-        self.root = tk.Tk() #creates main root
-        self.root.config(bg= backgroundColor)
-        self.root.title("Track Timer 1.0.0") #title display at the top
-        self.root.geometry('500x700') #inital dimensions of window
-
-        #image of clock    
-        #TODO: figure out how to get fill image to show
-        self.image1 = Canvas(self.root, width =350, height=350)
-        self.image1.place(relx=.5, rely=.4, anchor="center")
-        self.photo1 = PhotoImage(file='Images/Clock2.gif')
-        self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
-
 
 class StartingLabel:
     def __init__(self, root):
@@ -37,12 +21,23 @@ class StartButton:
 
     #changes text back and forth each click (kind of scuffed but it works)
     def handleMouseClick(self):
+        now = datetime.now()    # Not sure if this is the right place to put this
+                                # Use now() function to get datatime obj containing date and time - LPC
+
         self.clicks = self.clicks+1
 
         if((self.clicks)%2 != 0):
             self.button.config(text = "Stop")
+            stopTime = 0
+            stopTime = now.strftime("%H%M") # Attempting to capture stop time when "stop" is clicked - LPC
+
+            if stopTime != 0:
+                timeElapsed = (stopTime - startTime) # Might actually need to convert these from strings to ints? - LPC
+                # timer.label = timeElapsed TODO: Change label to show time elapsed rather than 00:00
+
         else:
             self.button.config(text = "Start")
+            startTime = now.strftime("%H%M") # Attempting to capture the start time when "start" is clicked - LPC
 
 
 class Timer:
@@ -50,16 +45,4 @@ class Timer:
         self.root = root
         self.label = tk.Label(self.root, text="00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
         self.label.place(relx= 0.5, rely=0.75, anchor='center')
-
-
-
-main = MainFrame()
-mainLabel = StartingLabel(main.root)
-timer = Timer(main.root)
-startButton = StartButton(main.root)
-
-
-main.root.mainloop() # TODO: What does this do? -LPC
-
-
 
