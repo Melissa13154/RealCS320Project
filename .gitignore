@@ -4,6 +4,7 @@
 *.o
 *.exe
 bin/*
+Images/*
 
 # Pyhon byte-compiled / optimized files
 __pycache__/
