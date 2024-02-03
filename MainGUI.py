@@ -6,7 +6,7 @@ import MainPageObjects
 
 backgroundColor = "#D1FFB0"
 
-TK_SILENCE_DEPRECATION=1
+TK_SILENCE_DEPRECATION=1 #suppress warnings
 
 class MainFrame:
     def __init__(self):
@@ -25,6 +25,7 @@ class MainFrame:
 
 main = MainFrame()
 mainLabel = MainPageObjects.StartingLabel(main.root)
+timeDropDownSelection = MainPageObjects.TimerTimeOptions(main.root)
 timer = MainPageObjects.Timer(main.root)
 startButton = MainPageObjects.StartButton(main.root)
 
