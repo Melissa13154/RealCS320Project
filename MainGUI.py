@@ -22,15 +22,11 @@ class MainFrame:
         self.photo1 = PhotoImage(file='Images/Clock2.gif')
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
-
 main = MainFrame()
 mainLabel = MainPageObjects.StartingLabel(main.root)
 timeDropDownSelection = MainPageObjects.TimerTimeOptions(main.root)
 timer = MainPageObjects.Timer(main.root)
 startButton = MainPageObjects.StartButton(main.root)
-
+tagButton = MainPageObjects.TimeTags(main.root)
 
 main.root.mainloop() 
-
-
-

@@ -1,3 +1,11 @@
+.DS_Store
+*.gif
+*.png
 *.o
 *.exe
 bin/*
+
+# Pyhon byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
