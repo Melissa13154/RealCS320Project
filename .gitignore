@@ -1,3 +1,6 @@
 .DS_Store
 *.gif
 *.png
+*.o
+*.exe
+bin/*
