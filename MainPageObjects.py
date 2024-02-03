@@ -37,7 +37,7 @@ class StartButton:
 
         else:
             self.button.config(text = "Start")
-            
+
 
 class TimerTimeOptions:
     def __init__(self, root):
@@ -54,8 +54,6 @@ class TimerTimeOptions:
         self.menu.pack() #just throwing it in for now
 
 
-
-
 class Timer:
     def __init__(self, root):
         self.root = root
@@ -70,3 +68,14 @@ class Timer:
 
     def countDown(self):
         pass
+
+class TimeTags:
+    def __init__(self, root):
+        self.root = root
+        def userin():
+            canvas = tk.Canvas(self.root, width=100, height=50, bg = 'white')
+            usr = tk.Entry(self.root, relief='flat', bg = backgroundColor)   # store user input into a database
+            canvas.create_window(200, 250, window=usr)
+
+        tagBtn = tk.Button(self.root, text = "Create a Tag", bg = backgroundColor, state = 'active', command = userin)
+        tagBtn.place(x = 250, y = 100)
