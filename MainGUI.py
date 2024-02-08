@@ -3,6 +3,7 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 
 import MainPageObjects
+import TimerObject
 
 backgroundColor = "#D1FFB0"
 
@@ -25,9 +26,7 @@ class MainFrame:
 
 main = MainFrame()
 mainLabel = MainPageObjects.StartingLabel(main.root)
-timeDropDownSelection = MainPageObjects.TimerTimeOptions(main.root)
-timer = MainPageObjects.Timer(main.root)
-startButton = MainPageObjects.StartButton(main.root)
+timer = TimerObject.Timer(main.root)
 
 
 main.root.mainloop() 
