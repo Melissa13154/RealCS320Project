@@ -3,6 +3,7 @@
 *.png
 *.o
 *.exe
+*.pyc
 bin/*
 Images/*
 

@@ -3,6 +3,7 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 
 import MainPageObjects
+import TimerObject
 
 backgroundColor = "#D1FFB0"
 
@@ -16,17 +17,14 @@ class MainFrame:
         self.root.geometry('500x700') #inital dimensions of window
 
         #image of clock    
-        #TODO: figure out how to get fill image to show
         self.image1 = Canvas(self.root, width =350, height=350)
         self.image1.place(relx=.5, rely=.4, anchor="center")
-        self.photo1 = PhotoImage(file='Images/Clock2.gif')
+        self.photo1 = PhotoImage(file='Images/Clock2-resized.gif') #TODO: Figure out how to make corners transparent
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
 main = MainFrame()
 mainLabel = MainPageObjects.StartingLabel(main.root)
-timeDropDownSelection = MainPageObjects.TimerTimeOptions(main.root)
-timer = MainPageObjects.Timer(main.root)
-startButton = MainPageObjects.StartButton(main.root)
-tagButton = MainPageObjects.TimeTags(main.root)
+timer = TimerObject.Timer(main.root)
+goalDashboardButton = MainPageObjects.GoalDashboardButton(main.root)
 
 main.root.mainloop() 
