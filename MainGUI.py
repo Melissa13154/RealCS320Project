@@ -23,13 +23,8 @@ class MainFrame:
         self.photo1 = PhotoImage(file='Images/Clock2.gif')
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
-
 main = MainFrame()
 mainLabel = MainPageObjects.StartingLabel(main.root)
 timer = TimerObject.Timer(main.root)
 
-
 main.root.mainloop() 
-
-
-
