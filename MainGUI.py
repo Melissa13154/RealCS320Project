@@ -20,7 +20,7 @@ class MainFrame:
         #TODO: figure out how to get fill image to show
         self.image1 = Canvas(self.root, width =350, height=350)
         self.image1.place(relx=.5, rely=.4, anchor="center")
-        self.photo1 = PhotoImage(file='Images/Clock2.gif')
+        self.photo1 = PhotoImage(file='Images/Clock2-resized.gif')
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
 main = MainFrame()
