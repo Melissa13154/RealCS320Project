@@ -19,3 +19,9 @@ class TimeTags:
             
         tagBtn = tk.Button(self.root, text = "Create a Tag", bg = backgroundColor, state = 'active', command = userin)
         tagBtn.place(x = 250, y = 100)
+
+class GoalDashboardbutton:
+    def __init__(self, root):
+        self.root = root
+        self.goaldashbutton = tk.Button(self.root, text = "Goal Dashboard", width=25, command=self.startStop)
+        self.button.place(relx= 0.5, rely = 0.2, anchor='center')
