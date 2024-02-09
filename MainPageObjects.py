@@ -20,6 +20,7 @@ class TimeTags:
         tagBtn = tk.Button(self.root, text = "Create a Tag", bg = backgroundColor, state = 'active', command = userin)
         tagBtn.place(x = 250, y = 100)
 
+
 class GoalDashboardButton:
     def __init__(self, root):
         self.root = root

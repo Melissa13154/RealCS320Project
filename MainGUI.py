@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import Canvas
 from tkinter import PhotoImage
+from tkinter import * # Is this necessary?
+from tkinter import ttk # For accessing Notebook widget
 
 import MainPageObjects
 import TimerObject
@@ -15,6 +17,14 @@ class MainFrame:
         self.root.config(bg= backgroundColor)
         self.root.title("Track Timer 1.0.0") #title display at the top
         self.root.geometry('500x700') #inital dimensions of window
+
+        notebook = ttk.Notebook(self.root)
+        tab1 = Frame(notebook)
+        tab2 = Frame(notebook)
+        notebook.add(tab1, text = "Main")
+        notebook.add(tab2, text = "Goal Dash")
+        notebook.pack()
+        Label(tab2, text = "The Goal Dashboard will go here.", width = 50, height = 50).pack()
 
         #image of clock    
         self.image1 = Canvas(self.root, width =350, height=350)
