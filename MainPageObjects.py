@@ -1,6 +1,6 @@
 import tkinter as tk
 
-backgroundColor = "#D1FFB0" #background color global for main theme
+backgroundColor = "#c7d0b4" #background color global for main theme
 
 class StartingLabel:
     def __init__(self, root):

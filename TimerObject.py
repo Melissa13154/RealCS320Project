@@ -2,7 +2,7 @@ import tkinter as tk
 import time
 import threading
 
-backgroundColor = "#D1FFB0"
+backgroundColor = "#c7d0b4"
 
 
 #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
