@@ -13,6 +13,7 @@ import TimerTags
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
 backgroundColor = "#3A7069"
+IMAGES = "ClockResized.gif"
 
 ### OUTERFRAME CLASS  ###
 class OuterFrame:
