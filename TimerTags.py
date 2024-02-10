@@ -3,7 +3,6 @@ import tkinter as tk
 myColor = "#c7d0b4"
 DEBUG = 1
 
-
 class Tags:
     def __init__(self, root):
         self.root = root
