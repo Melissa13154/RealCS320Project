@@ -8,10 +8,12 @@ from tkinter import ttk # For accessing Notebook widget
 import MainPageObjects
 import TimerObject
 import TimerFrameObject
+import TimerTags
 
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
 backgroundColor = "#3A7069"
+IMAGES = "ClockResized.gif"
 
 ### OUTERFRAME CLASS  ###
 class OuterFrame:
@@ -32,7 +34,6 @@ class OuterFrame:
     notebook.add(mainTab, text = "Main Menu")
     notebook.add(tagsTab, text = "Tags Menu")
     notebook.add(goalsTab, text = "Goal Dashboard")
-
     notebook.pack(expand = 1, fill = 'both')
 
     ### ADD TO mainTab ###
