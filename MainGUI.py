@@ -28,5 +28,6 @@ mainLabel = MainPageObjects.StartingLabel(main.root)
 timer = TimerObject.Timer(main.root)
 goalDashboardButton = MainPageObjects.GoalDashboardButton(main.root)
 tags = TimerTags.Tags(main.root)
+tags.createTags()
 
 main.root.mainloop() 
