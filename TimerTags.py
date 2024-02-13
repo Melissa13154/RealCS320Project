@@ -4,6 +4,13 @@ myColor = "#c7d0b4"
 DEBUG = 1
 
 
+class GoalDashboardButton:
+    def __init__(self, root):
+        self.root = root
+        self.goaldashbutton = tk.Button(self.root, text = "Goal Dashboard", width=30)
+        self.goaldashbutton.place(relx= 0.5, rely = 0.9, anchor='center')
+
+
 class Tags:
     def __init__(self, root):
         self.root = root
