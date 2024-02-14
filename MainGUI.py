@@ -37,7 +37,6 @@ class OuterFrame:
 
         ### ADD TO mainTab ###
         #Label(self.mainTab, text = "Put frame with timer, clock image, start/stop button here.").pack()
-        # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
         # Add TimerObject, TimerFrameObjects, etc.  Will this be a possible?
                                                         #^^yes it will >:)
 
