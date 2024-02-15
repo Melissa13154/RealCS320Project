@@ -29,9 +29,15 @@ class GoalsFrameDropdown(tk.Frame):
         self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *self.timeTagOptions, style='Custom.TMenubutton')
         self.goalDropdownMenu.place(relx=0.5, rely=0.3, anchor = "center")
 
-        self.printButton = ttk.Button(root, text="Print Selected Option", command=self.printSelectedGoal)
+        self.printButton = ttk.Button(root, text="Confirm Goal", command=self.printSelectedGoalOnGUI)
         self.printButton.place(relx=0.5, rely=0.4, anchor = "center")
 
     def printSelectedGoal(self):
         self.printThis = self.selectedGoal.get()
         print("You're setting a goal for:", self.printThis)
+
+    def printSelectedGoalOnGUI(self):
+        self.printThisOnScreen = self.selectedGoal.get()
+        if self.printThisOnScreen != '':
+            self.goalConfirmed = tk.Label(self.root, text=self.printThisOnScreen, font=('MS Sans Serif', 20), bg = backgroundColor)
+            self.goalConfirmed.place(relx=.5, rely=.45, anchor = "center")
