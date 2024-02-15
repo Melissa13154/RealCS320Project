@@ -65,7 +65,8 @@ def main():
     tagFrame = TimerTags.GoalDashboardButton(outerFrame.tagsTab)
 
     #goalsTab
-    goalFrame = GoalsTabObjects.GoalsFrame(outerFrame.goalsTab)
+    goalFrame = GoalsTabObjects.GoalsFrameIntro(outerFrame.goalsTab)
+    setGoalDropdown = GoalsTabObjects.GoalsFrameDropdown(outerFrame.goalsTab)
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()
