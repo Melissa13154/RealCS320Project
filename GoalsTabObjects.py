@@ -20,7 +20,7 @@ class GoalsFrameDropdown(tk.Frame):
     def __init__(self, root):
         self.root = root
 
-        self.selectedGoal = tk.StringVar()
+        self.selectedGoal = tk.StringVar(root)
         self.timeTagOptions = ["Study databases", "Workout", "Read a book", "Work on CS 320 Project"]
 
         style = ttk.Style()
@@ -29,3 +29,9 @@ class GoalsFrameDropdown(tk.Frame):
         self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *self.timeTagOptions, style='Custom.TMenubutton')
         self.goalDropdownMenu.place(relx=0.5, rely=0.3, anchor = "center")
 
+        self.printButton = ttk.Button(root, text="Print Selected Option", command=self.printSelectedGoal)
+        self.printButton.place(relx=0.5, rely=0.4, anchor = "center")
+
+    def printSelectedGoal(self):
+        self.printThis = self.selectedGoal.get()
+        print("You're setting a goal for:", self.printThis)
