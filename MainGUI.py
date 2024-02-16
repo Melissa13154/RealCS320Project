@@ -1,14 +1,18 @@
 ### IMPORTS ###
 import tkinter as tk
-from tkinter import * # Is this necessary?
+from tkinter import *
 from tkinter import ttk # For accessing Notebook widget
 
 import TimerObject
 import TimerTags
+import GoalsTabObjects
 
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
 backgroundColor = "#3A7069"
+
+#s = ttk.Style()
+#s.configure('TFrame', background='red')
 
 class OuterFrame:
     ### CREATING INSTANCE OF GUI ###
@@ -43,6 +47,8 @@ def main():
     tagBtn = TimerTags.Tags(outerFrame.tagsTab)
 
     #goalsTab
+    goalFrame = GoalsTabObjects.GoalsFrameIntro(outerFrame.goalsTab)
+    setGoalDropdown = GoalsTabObjects.GoalsFrameDropdown(outerFrame.goalsTab)
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()
