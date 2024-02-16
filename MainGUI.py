@@ -4,14 +4,19 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 from tkinter import * # Is this necessary?
 from tkinter import ttk # For accessing Notebook widget
+#from tkinter.ttk import *
 
 import TimerObject
 import TimerTags
+import GoalsTabObjects
 
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
 backgroundColor = "#3A7069"
 IMAGES = "ClockResized.gif"
+
+#s = ttk.Style()
+#s.configure('TFrame', background='red')
 
 ### OUTERFRAME CLASS  ###
 class OuterFrame:
@@ -27,6 +32,7 @@ class OuterFrame:
         ### CREATE TABS ###
         self.mainTab = ttk.Frame(self.notebook)
         self.tagsTab = ttk.Frame(self.notebook)
+        #self.goalsTab = ttk.Frame(self.notebook, style='TFrame')
         self.goalsTab = ttk.Frame(self.notebook)
 
         ### POPULATE NOTEBOOK WITH TABS ###
@@ -37,7 +43,6 @@ class OuterFrame:
 
         ### ADD TO mainTab ###
         #Label(self.mainTab, text = "Put frame with timer, clock image, start/stop button here.").pack()
-        # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
         # Add TimerObject, TimerFrameObjects, etc.  Will this be a possible?
                                                         #^^yes it will >:)
 
@@ -45,7 +50,7 @@ class OuterFrame:
         Label(self.tagsTab, text = "Make new tags here.").pack()
 
         ### ADD TO goalsTab ###
-        Label(self.goalsTab, text = "Goals Dashboard here.").pack()
+        #Label(self.goalsTab, text = "Goals Dashboard here.").pack()
 
 
 def main():
@@ -60,7 +65,8 @@ def main():
     tagFrame = TimerTags.GoalDashboardButton(outerFrame.tagsTab)
 
     #goalsTab
-    #goalFrame = I dont think this exists yet
+    goalFrame = GoalsTabObjects.GoalsFrameIntro(outerFrame.goalsTab)
+    setGoalDropdown = GoalsTabObjects.GoalsFrameDropdown(outerFrame.goalsTab)
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()
