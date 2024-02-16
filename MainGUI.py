@@ -1,7 +1,5 @@
 ### IMPORTS ###
 import tkinter as tk
-from tkinter import Canvas
-from tkinter import PhotoImage
 from tkinter import * # Is this necessary?
 from tkinter import ttk # For accessing Notebook widget
 
@@ -11,45 +9,30 @@ import TimerTags
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
 backgroundColor = "#3A7069"
-IMAGES = "ClockResized.gif"
 
-### OUTERFRAME CLASS  ###
 class OuterFrame:
-    def __init__(self):
-        self.root = tk.Tk() # Creates main root
-        self.root.title('Our Wonderful Time Tracking GUI 1.0.0') # Title displays at the top
-        #root.geometry = ('500 x 700') # Initial dimensions of window
-        self.root.minsize(500, 700) # Hmm, this one seems to work and not the root.geometry statement above
+    ### CREATING INSTANCE OF GUI ###
+    root = tk.Tk() 
+    root.title('Our Wonderful Time Tracking GUI 1.0.0') # Title displays at the top
+    root.minsize(500, 700) 
 
-        ### CREATE NOTEBOOK ###
-        self.notebook = ttk.Notebook(self.root) # Create Notebook
+    ### CREATE INSTANCE OF NOTEBOOK ###
+    notebook = ttk.Notebook(root)
 
-        ### CREATE TABS ###
-        self.mainTab = ttk.Frame(self.notebook)
-        self.tagsTab = ttk.Frame(self.notebook)
-        self.goalsTab = ttk.Frame(self.notebook)
+    ### CREATE TABS ###
+    mainTab = ttk.Frame(notebook)
+    tagsTab = ttk.Frame(notebook)
+    goalsTab = ttk.Frame(notebook)
 
-        ### POPULATE NOTEBOOK WITH TABS ###
-        self.notebook.add(self.mainTab, text = "Main Menu")
-        self.notebook.add(self.tagsTab, text = "Tags Menu")
-        self.notebook.add(self.goalsTab, text = "Goal Dashboard")
-        self.notebook.pack(expand = 1, fill = 'both')
+    ### POPULATE NOTEBOOK WITH TABS ###
+    notebook.add(mainTab, text = "Main Menu")
+    notebook.add(tagsTab, text = "Tags Menu")
+    notebook.add(goalsTab, text = "Goal Dashboard")
+    notebook.pack(expand = 1, fill = 'both')
 
-        ### ADD TO mainTab ###
-        #Label(self.mainTab, text = "Put frame with timer, clock image, start/stop button here.").pack()
-        # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
-        # Add TimerObject, TimerFrameObjects, etc.  Will this be a possible?
-                                                        #^^yes it will >:)
-
-        ### ADD TO tagsTab ###
-        Label(self.tagsTab, text = "Make new tags here.").pack()
-
-        ### ADD TO goalsTab ###
-        Label(self.goalsTab, text = "Goals Dashboard here.").pack()
-
+    # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
 
 def main():
-    ### CREATE OBJECT ###
     outerFrame = OuterFrame()
 
     #mainTab
@@ -57,10 +40,9 @@ def main():
     timer = TimerObject.Timer(outerFrame.mainTab)
 
     #tagsTab
-    tagFrame = TimerTags.GoalDashboardButton(outerFrame.tagsTab)
+    tagBtn = TimerTags.Tags(outerFrame.tagsTab)
 
     #goalsTab
-    #goalFrame = I dont think this exists yet
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()
