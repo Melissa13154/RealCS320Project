@@ -5,7 +5,7 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 
 backgroundColor = "#3A7069"
-
+IMAGE = 'ClockResized.gif'
 
 class TimerFrame(tk.Frame):
     def __init__(self, root):
@@ -14,13 +14,11 @@ class TimerFrame(tk.Frame):
         #image of clock    
         self.image1 = Canvas(self.root, width =350, height=350, bg=backgroundColor, borderwidth=0)
         self.image1.place(relx=.5, rely=.4, anchor="center")
-        self.photo1 = PhotoImage(file='Images/Clock2-resized.gif') #TODO: Figure out how to make corners transparent
+        self.photo1 = PhotoImage(file=IMAGE) #TODO: Figure out how to make corners transparent
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
         self.label = tk.Label(self.root, text = "Click start to begin", font=('MS Sans Serif', 20), bg= backgroundColor)
         self.label.place(relx=.5, rely=.1, anchor="center")
-
-
 
 
 #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
@@ -36,14 +34,12 @@ class Timer:
         self.label = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
         self.label.place(relx= 0.5, rely=0.75, anchor='center')
 
-
     def generateString(self, newCurrentTime):
         #newCurrentTime type = float
         currentSecond = newCurrentTime % 60
         currentMinute = newCurrentTime // 60 #// = "floor divide"
         currentHour = currentMinute // 60
         return f"{int(currentHour):02d}:{int(currentMinute):02d}:{int(currentSecond):02d}"
-
 
     def startStop(self):
         self.currentlyRunning = not self.currentlyRunning
@@ -54,7 +50,6 @@ class Timer:
 
         else:
             self.button.config(text = "Start") #change button label
-
 
     def countUp(self):
         startTime = time.time() #grabs the current time in seconds
