@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import time
 import threading
 from tkinter import Canvas
@@ -23,16 +24,22 @@ class TimerFrame(tk.Frame):
 
 #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
 class Timer:
-    def __init__(self, root):
+    def __init__(self, root, timeTagOptions):
         self.root = root
+        self.timeTagOptions = timeTagOptions
         self.currentlyRunning = False
         self.timePassed = 0
 
-        self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
-        self.button.place(relx= 0.5, rely = 0.8, anchor='n')
-        
+        self.selectedGoal = tk.StringVar(root)
+
         self.label = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
-        self.label.place(relx= 0.5, rely=0.75, anchor='center')
+        self.label.place(relx= 0.5, rely=0.7, anchor='center')
+
+        self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *timeTagOptions, style='Custom.TMenubutton')
+        self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
+
+        self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
+        self.button.place(relx= 0.5, rely = 0.9, anchor='n')
 
     def generateString(self, newCurrentTime):
         #newCurrentTime type = float
@@ -45,6 +52,8 @@ class Timer:
         self.currentlyRunning = not self.currentlyRunning
 
         if(self.currentlyRunning):
+            self.selectedGoal = self.selectedGoal.get() # Capture what was in dropdown
+            print(f"Goal selected: {self.selectedGoal}")
             self.button.config(text = "Stop") #change button label
             threading.Thread(target=self.countUp).start() #start new thread to count
 
