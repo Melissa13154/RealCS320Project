@@ -69,7 +69,7 @@ def main():
 
     #tagsTab
     tagBtn = TimerTags.CreateTags(outerFrame.tagsTab)
-    DBconnection, DBcur = timerDB.getConnectionInfo()
+    #DBconnection, DBcur = timerDB.getConnectionInfo()
 
     #goalsTab
     goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab)
