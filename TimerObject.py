@@ -53,15 +53,11 @@ class Timer:
 
         if(self.currentlyRunning):
             self.goalToTrack = self.selectedGoal.get()
-            #self.selectedGoal = self.selectedGoal.get() # Capture what was in dropdown
             print(f"Goal selected: {self.goalToTrack}")
             self.button.config(text = "Stop") #change button label
             threading.Thread(target=self.countUp).start() #start new thread to count
 
         else:
-            #self.selectedGoal.set(*self.timeTagOptions)
-            #self.goaltoTrack = self.selectedGoal.set(self.timeTagOptions)
-            #self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
             self.button.config(text = "Start") #change button label
 
     def countUp(self):
