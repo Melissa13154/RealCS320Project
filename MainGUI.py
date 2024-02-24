@@ -6,6 +6,7 @@ from tkinter import ttk # For accessing Notebook widget
 import TimerObject
 import TimerTags
 import GoalsTabObjects
+import databaseInit
 
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
@@ -36,6 +37,9 @@ class OuterFrame:
 
     # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
 
+### CREATE DATABASE ONCE ###
+timerDB = databaseInit.DB()
+
 def main():
     outerFrame = OuterFrame()
 
@@ -44,7 +48,8 @@ def main():
     timer = TimerObject.Timer(outerFrame.mainTab)
 
     #tagsTab
-    tagBtn = TimerTags.Tags(outerFrame.tagsTab)
+    tagBtn = TimerTags.CreateTags(outerFrame.tagsTab)
+    DBconnection, DBcur = timerDB.getConnectionInfo()
 
     #goalsTab
     goalFrame = GoalsTabObjects.GoalsFrameIntro(outerFrame.goalsTab)
