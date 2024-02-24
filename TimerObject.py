@@ -35,6 +35,8 @@ class Timer:
         self.label = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
         self.label.place(relx= 0.5, rely=0.7, anchor='center')
 
+        style = ttk.Style()
+        style.configure('Custom.TMenubutton', background='white')
         self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *timeTagOptions, style='Custom.TMenubutton')
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
