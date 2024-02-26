@@ -4,6 +4,7 @@ import time
 import threading
 from tkinter import Canvas
 from tkinter import PhotoImage
+from tkinter.ttk import Notebook, Style
 
 backgroundColor = "#3A7069"
 IMAGE = 'ClockResized.gif'
@@ -23,20 +24,20 @@ class TimerFrame(tk.Frame):
 
 
 #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
-class Timer:
+class Timer(TimerFrame):
     def __init__(self, root, timeTagOptions):
-        self.root = root
+        TimerFrame.__init__(self, root)
         self.timeTagOptions = timeTagOptions
         self.currentlyRunning = False
         self.timePassed = 0
 
         self.selectedGoal = tk.StringVar(root)
 
-        self.label = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
-        self.label.place(relx= 0.5, rely=0.7, anchor='center')
+        self.timerLabel = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
+        self.timerLabel.place(relx= 0.5, rely=0.7, anchor='center')
 
         style = ttk.Style()
-        style.configure('Custom.TMenubutton', background='white')
+        style.configure('Custom.', background= backgroundColor)
         self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *timeTagOptions, style='Custom.TMenubutton')
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
@@ -65,6 +66,10 @@ class Timer:
     def countUp(self):
         startTime = time.time() #grabs the current time in seconds
 
+        self.label.place_forget() #Tried to exetend the class but its not removing the label????
+
         while self.currentlyRunning:
             self.timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
-            self.label.config(text = self.generateString(self.timePassed))
+            self.timerLabel.config(text = self.generateString(self.timePassed))
+
+        self.timerLabel.config(text = self.generateString(0.0))
