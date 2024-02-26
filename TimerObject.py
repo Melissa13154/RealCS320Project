@@ -35,6 +35,8 @@ class Timer:
         self.label = tk.Label(self.root, text="00:00:00", font=('MS Sans Serif', 20), bg=backgroundColor)
         self.label.place(relx= 0.5, rely=0.7, anchor='center')
 
+        style = ttk.Style()
+        style.configure('Custom.TMenubutton', background='white')
         self.goalDropdownMenu = ttk.OptionMenu(root, self.selectedGoal, *timeTagOptions, style='Custom.TMenubutton')
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
@@ -52,8 +54,8 @@ class Timer:
         self.currentlyRunning = not self.currentlyRunning
 
         if(self.currentlyRunning):
-            self.selectedGoal = self.selectedGoal.get() # Capture what was in dropdown
-            print(f"Goal selected: {self.selectedGoal}")
+            self.goalToTrack = self.selectedGoal.get()
+            print(f"Goal selected: {self.goalToTrack}")
             self.button.config(text = "Stop") #change button label
             threading.Thread(target=self.countUp).start() #start new thread to count
 

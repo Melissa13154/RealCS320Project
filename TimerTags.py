@@ -1,10 +1,11 @@
 import tkinter as tk
-# import mypysql
+import pymysql
+
 
 myColor = "#c7d0b4"
 DEBUG = 1
 
-class Tags:
+class CreateTags:
     clicked = False
 
     def __init__(self, root):
@@ -19,11 +20,11 @@ class Tags:
         self.object = object 
         self.object.destroy()
 
-    def userIn(self, input):
+    def retrieveUserIn(self, input):
         self.input = input
         print(self.input.get())
 
-    def tagInput(self):
+    def createTextBox(self):
         if DEBUG: print("I am here")
         # create pop up window displaying list of existing tags
         # have a cancel option and a create new option
@@ -32,14 +33,14 @@ class Tags:
         input.pack()
         # input.config(command=lambda: self.close(input))
 
-        ok = tk.Button(self.root, text="OK", state='active', command=lambda: self.userIn(input))
-        ok.pack(side='right')
+        okBtn = tk.Button(self.root, text="OK", state='active', command=lambda: self.retrieveUserIn(input))
+        okBtn.pack(side='right')
         # ok.config(command=lambda: self.close(input))
         # sql = "INSERT INTO test(pk, info, num) VALUES ("+input+", )"
 
     def createTags(self, root):
         self.root = root
         clicked = False
-        tagBtn = tk.Button(self.root, text = "Create a Tag", bg=myColor, state='active', command=self.tagInput)
+        tagBtn = tk.Button(self.root, text = "Create a Tag", bg=myColor, state='active', command=self.createTextBox)
         tagBtn.pack()
         # self.close(tagBtn)
