@@ -59,17 +59,18 @@ class Timer(TimerFrame):
             print(f"Goal selected: {self.goalToTrack}")
             self.button.config(text = "Stop") #change button label
             threading.Thread(target=self.countUp).start() #start new thread to count
-
+            #Create and destroy thread
         else:
             self.button.config(text = "Start") #change button label
 
     def countUp(self):
+        print("Start counting")
         startTime = time.time() #grabs the current time in seconds
-
         self.label.place_forget() #Tried to exetend the class but its not removing the label????
 
         while self.currentlyRunning:
             self.timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
             self.timerLabel.config(text = self.generateString(self.timePassed))
+            time.sleep(0.001)
 
         self.timerLabel.config(text = self.generateString(0.0))
