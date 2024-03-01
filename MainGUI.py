@@ -72,7 +72,7 @@ def main():
 
     #goalsTab
     goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab)
-    setGoal = GoalsTabObjects.GoalsFrameSetGoal(outerFrame.goalsTab)
+    setGoal = GoalsTabObjects.GoalsFrameSetGoal(outerFrame.goalsTab, timeTagOptions)
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()
