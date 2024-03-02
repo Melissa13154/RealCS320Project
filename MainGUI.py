@@ -24,8 +24,11 @@ class OuterFrame:
     ### CREATE INSTANCE OF NOTEBOOK ###
     notebook = ttk.Notebook(root)
 
+    s = ttk.Style()
+    s.configure('new.TFrame', background = backgroundColor)
+
     ### CREATE TABS ###
-    mainTab = ttk.Frame(notebook)
+    mainTab = ttk.Frame(notebook, style='new.TFrame')
     tagsTab = ttk.Frame(notebook)
     goalsTab = ttk.Frame(notebook)
 
@@ -36,7 +39,6 @@ class OuterFrame:
     notebook.pack(expand = 1, fill = 'both')
 
     # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
-
 
 ### CREATE DATABASE ONCE ###
 #timerDB = databaseInit.DB()
@@ -59,11 +61,12 @@ def main():
             print(f"Contents of list: {timeTagOptions}")
 
     ### CREATE TIMETAGS LIST FROM DATABASE ###
-    #readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
+    readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
 
     outerFrame = OuterFrame()
 
     #mainTab
+
     mainFrame = TimerObject.TimerFrame(outerFrame.mainTab)
     timer = TimerObject.Timer(outerFrame.mainTab, timeTagOptions)
 
