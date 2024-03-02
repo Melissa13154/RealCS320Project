@@ -5,20 +5,23 @@ class DB:
         self.connection, self.cursor = self.init()
         self.buildDB(self.connection, self.cursor)
 
-    def init():
-        connection = pymysql.connect(host='localhost', port=3306, user='root', passwd='1234root')
-        cursor = connection.cursor()
-        return connection, cursor
+    def init(self):
+        self.connection = pymysql.connect(host='localhost', port=3306, user='root', passwd='1234root')
+        self.cursor = self.connection.cursor()
+        return self.connection, self.cursor
 
-    def buildDB(connection, cursor):
-        query = "CREATE DATABASE TIMER"
+    def buildDB(self, connection, cursor):
+        query = "CREATE DATABASE IF NOT EXISTS Timer;"
+        cursor.execute(query)
+        connection.commit()
+        query = "USE Timer;"
         cursor.execute(query)
         connection.commit()
         query = "CREATE TABLE Records(\
-                    date DATETIME\
-                    tag VARCHAR(20)\
-                    duration TIMESTAMP\
-                    associatedGoal SET('Y', 'N')\
+                    date DATETIME,\
+                    tag VARCHAR(20),\
+                    duration TIME,\
+                    associatedGoal INT\
                     )"
         cursor.execute(query)
         connection.commit()

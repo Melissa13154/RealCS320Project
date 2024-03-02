@@ -48,8 +48,7 @@ def main():
     timer = TimerObject.Timer(outerFrame.mainTab)
 
     #tagsTab
-    tagBtn = TimerTags.CreateTags(outerFrame.tagsTab)
-    DBconnection, DBcur = timerDB.getConnectionInfo()
+    tagBtn = TimerTags.CreateTags(outerFrame.tagsTab, timerDB)
 
     #goalsTab
     goalFrame = GoalsTabObjects.GoalsFrameIntro(outerFrame.goalsTab)

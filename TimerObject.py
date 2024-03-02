@@ -5,7 +5,7 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 
 backgroundColor = "#3A7069"
-IMAGE = 'ClockResized.gif'
+IMAGE = 'Clock.gif'
 
 class TimerFrame(tk.Frame):
     def __init__(self, root):

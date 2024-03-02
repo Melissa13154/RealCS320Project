@@ -8,7 +8,8 @@ DEBUG = 1
 class CreateTags:
     clicked = False
 
-    def __init__(self, root):
+    def __init__(self, root, timerDB):
+        self.timerDB = timerDB
         self.root = root
         self.createTags(self.root)
 
@@ -44,3 +45,13 @@ class CreateTags:
         tagBtn = tk.Button(self.root, text = "Create a Tag", bg=myColor, state='active', command=self.createTextBox)
         tagBtn.pack()
         # self.close(tagBtn)
+
+
+
+
+    def createTag(self, root):
+        self.root = root
+
+        ### BUILD TAG BUTTON ###
+        tagBtn = tk.Button(self.root, text = "Create a Tag", bg=myColor, state='active', command=self.createTextBox)
+        tagBtn.pack()
