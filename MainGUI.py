@@ -44,7 +44,7 @@ class OuterFrame:
 def main():
 
     ### TIMETAGS VARIABLES ###
-    timeDatabase = 'timeDatabase.csv'
+    timeDatabase = 'timeDatabaseEMPTY.csv'
     timeTagOptions = []
 
     ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
@@ -71,7 +71,7 @@ def main():
     #DBconnection, DBcur = timerDB.getConnectionInfo()
 
     #goalsTab
-    goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab)
+    goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab ,timeTagOptions)
     setGoal = GoalsTabObjects.GoalsFrameSetGoal(outerFrame.goalsTab, timeTagOptions)
 
     ### MAINLOOP CALL ###

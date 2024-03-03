@@ -7,8 +7,9 @@ import csv
 backgroundColor = "#3A7069"
 
 class GoalsFrameSetup(tk.Frame):
-    def __init__(self, root):
+    def __init__(self, root, timeTagOptions):
         self.root = root
+        self.timeTagOptions = timeTagOptions
 
         self.image = Image.open("graphPaper.jpg")
         self.photo_image = ImageTk.PhotoImage(self.image)
@@ -19,9 +20,25 @@ class GoalsFrameSetup(tk.Frame):
         self.header = tk.Label(self.root, text = "Set a Goal!", font=('MS Sans Serif', 40))
         self.header.place(relx=.5, rely=.10, anchor = "center")
 
-        self.instructions = tk.Label(self.root, text = "Select a category + time goal below:", font=('MS Sans Serif', 20))
-        self.instructions.place(relx=.5, rely=.19, anchor = "center")
+        ### CHECK IF LIST IS EMPTY ###
+        listIsEmpty = True
+        listIsEmpty = self.checkIfGoalsListIsEmpty()
+        if listIsEmpty: 
+            print("No TimeTags Exist.  Please populate the database first.")
+            self.pleasePopulateTagsList = tk.Label(self.root, text = "Please Populate your Goal Tags in the Tags Tab", font=('MS Sans Serif', 20))
+            self.pleasePopulateTagsList.place(relx=.5, rely=.19, anchor = "center")
+        else:
+            print("TimeTags have been populated.  List is NOT empty.")
+            self.instructions = tk.Label(self.root, text = "Select a category + time goal below:", font=('MS Sans Serif', 20))
+            self.instructions.place(relx=.5, rely=.19, anchor = "center")
 
+    ### CHECK IF GOALS LIST IS EMPTY ###
+    def checkIfGoalsListIsEmpty(self):
+        if len(self.timeTagOptions) == 0:
+            return True
+        else: 
+            return False
+    
 
 class GoalsFrameSetGoal(tk.Frame):
     def __init__(self, root, timeTagOptions):
@@ -47,7 +64,6 @@ class GoalsFrameSetGoal(tk.Frame):
         # readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
 
         self.selectedGoal = tk.StringVar(root)
-        # self.timeTagOptions = ["Study databases", "Workout", "Read a book", "Work on CS 320 Project"]
 
         self.selectedTimeGoal = tk.StringVar(root)
 
@@ -70,16 +86,6 @@ class GoalsFrameSetGoal(tk.Frame):
 
         self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
-
-    ### CHECK IF GOALS LIST IS EMPTY ###
-    def checkIfGoalsListIsEmpty(self):
-        listIsEmpty = True
-        if len(self.timeTagOptions) == 0:
-            print("No TimeTags Exist.  Please populate the database first.")
-            return
-        else: 
-            print("TimeTags have been populated.  List is NOT empty.")
-            listIsEmpty = False
 
 
     ### SET GOAL FUNCTION ###
