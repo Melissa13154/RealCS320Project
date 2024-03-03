@@ -71,6 +71,17 @@ class GoalsFrameSetGoal(tk.Frame):
         self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
+    ### CHECK IF GOALS LIST IS EMPTY ###
+    def checkIfGoalsListIsEmpty(self):
+        listIsEmpty = True
+        if len(self.timeTagOptions) == 0:
+            print("No TimeTags Exist.  Please populate the database first.")
+            return
+        else: 
+            print("TimeTags have been populated.  List is NOT empty.")
+            listIsEmpty = False
+
+
     ### SET GOAL FUNCTION ###
     def setGoal(self):
         self.currentlySettingGoal = not self.currentlySettingGoal
