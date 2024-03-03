@@ -45,7 +45,6 @@ class Timer(TimerFrame):
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
 
     def generateString(self, newCurrentTime):
-        #newCurrentTime type = float
         currentSecond = newCurrentTime % 60
         currentMinute = newCurrentTime // 60 #// = "floor divide"
         currentHour = currentMinute // 60

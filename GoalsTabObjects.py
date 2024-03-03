@@ -18,34 +18,33 @@ class GoalsFrameSetup(tk.Frame):
         
         self.header = tk.Label(self.root, text = "Set a Goal!", font=('MS Sans Serif', 40))
         self.header.place(relx=.5, rely=.10, anchor = "center")
-        #self.header.pack()
 
         self.instructions = tk.Label(self.root, text = "Select a category + time goal below:", font=('MS Sans Serif', 20))
         self.instructions.place(relx=.5, rely=.19, anchor = "center")
-        #self.instructions.pack()
 
 
 class GoalsFrameSetGoal(tk.Frame):
-    def __init__(self, root):
+    def __init__(self, root, timeTagOptions):
         self.root = root
-        #self.timeTagOptions = timeTagOptions
+        self.timeTagOptions = timeTagOptions
+        self.currentlySettingGoal = False
 
         ### TIMETAGS VARIABLES ###
-        timeDatabase = 'timeDatabase.csv'
-        timeTagOptions = []
+        #timeDatabase = 'timeDatabase.csv'
+        #timeTagOptions = []
 
-        ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
-        def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
-            with open (timeDatabase, mode = 'r') as timeDatabase:
-                csvReader = csv.reader(timeDatabase)
-                next(csvReader) # Skip column titles, begin at row below that
-                for row in csvReader:
-                    timeTagOptions.append(row[0])
-                print("Finished assembling timeTagOptions list from timeDatabase.")
-                print(f"Contents of list: {timeTagOptions}")
+        # ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
+        # def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
+        #     with open (timeDatabase, mode = 'r') as timeDatabase:
+        #         csvReader = csv.reader(timeDatabase)
+        #         next(csvReader) # Skip column titles, begin at row below that
+        #         for row in csvReader:
+        #             timeTagOptions.append(row[0])
+        #         print("Finished assembling timeTagOptions list from timeDatabase.")
+        #         print(f"Contents of list: {timeTagOptions}")
 
-        ### CREATE TIMETAGS LIST FROM DATABASE ###
-        readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
+        # ### CREATE TIMETAGS LIST FROM DATABASE ###
+        # readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
 
         self.selectedGoal = tk.StringVar(root)
         # self.timeTagOptions = ["Study databases", "Workout", "Read a book", "Work on CS 320 Project"]
@@ -72,13 +71,31 @@ class GoalsFrameSetGoal(tk.Frame):
         self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
+    ### CHECK IF GOALS LIST IS EMPTY ###
+    def checkIfGoalsListIsEmpty(self):
+        listIsEmpty = True
+        if len(self.timeTagOptions) == 0:
+            print("No TimeTags Exist.  Please populate the database first.")
+            return
+        else: 
+            print("TimeTags have been populated.  List is NOT empty.")
+            listIsEmpty = False
+
+
     ### SET GOAL FUNCTION ###
     def setGoal(self):
-        self.selectedGoal = self.selectedGoal.get()
-        self.selectedTimeGoal = self.selectedTimeGoal.get()
-        print("Setting goal for:", self.selectedGoal)
-        print("Time goal:", self.selectedTimeGoal)
-        self.checkIfGoalAlreadyExists() # Call the next function
+        self.currentlySettingGoal = not self.currentlySettingGoal
+
+        if(self.currentlySettingGoal):
+            self.goalToTrack = self.selectedGoal.get()
+            self.goalTimeDuration = self.selectedTimeGoal.get()
+            print("Setting goal for:", self.goalToTrack)
+            print("Time goal:", self.goalTimeDuration)
+            self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
+            self.checkIfGoalAlreadyExists() # Call the next function
+
+        else:
+            self.setGoalButton.config(text = "Confirm Goal") #change button label
         
     ### FIND GOAL ROW IN DATABASE ###
     def checkIfGoalAlreadyExists(self):
@@ -88,7 +105,7 @@ class GoalsFrameSetGoal(tk.Frame):
             print("Opened timeDatabase.csv")
             rowNumber = 0
             for row in csvReader:
-                if row[0] == self.selectedGoal:
+                if row[0] == self.goalToTrack:
                     print("Goal found in database")
                     print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
                     return
