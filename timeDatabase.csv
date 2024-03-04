@@ -1,7 +1,7 @@
 timeTag,startTime,stopTime,totalTime,goalSetBool,goalTime,timeAccumulatedSoFar,goalMetBool
-read for fun,,,,,,,
-databases hw,,,,,,,
-walk,,,,,,,
-study haskell,,,,,,,
-work on rpn assignment,,,,,,,
-Workout,,,,,,,
+read for fun,,,,0,,,
+databases hw,,,,1,,,
+walk,,,,1,,,
+study haskell,,,,1,,,
+work on rpn assignment,,,,0,,,
+Workout,,,,1,,,

@@ -3,7 +3,6 @@ from tkinter import ttk
 import PIL
 from PIL import Image, ImageTk
 import csv
-import time
 
 backgroundColor = "#3A7069"
 
@@ -85,10 +84,9 @@ class GoalsFrameSetGoal(tk.Frame):
         self.sixtyMins = ttk.Radiobutton(root, text="60 mins", variable=self.selectedTimeGoal, value="60")
         self.sixtyMins.place(relx=.7, rely=.30)
 
-        self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.didUserSelectARadioButton)
+        self.setGoalButton = ttk.Button(root, text="Initialize", command=self.didUserSelectARadioButton)
         #self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
-
 
         ### CHECK IF LIST IS EMPTY ###
         listIsEmpty = True
@@ -127,22 +125,11 @@ class GoalsFrameSetGoal(tk.Frame):
     ### SET GOAL FUNCTION ###
     def setGoal(self):
         self.currentlySettingGoal = not self.currentlySettingGoal
+        rowNumber = 9999
 
         if(self.currentlySettingGoal):
             self.goalToTrack = self.selectedGoal.get()
             self.goalTimeDuration = self.selectedTimeGoal.get()
-
-            #userSelectedRadioButton = self.didUserSelectARadioButton()
-
-            # while userSelectedRadioButton == False:
-            #     print("Error, you didn't select a time goal.  Please select one now.")
-            #     self.goalTimeDuration = self.selectedTimeGoal.get()
-            #     time.sleep(5)
-            #     print("Done waiting for 5 seconds")
-            #     secondChance = self.didUserSelectARadioButton()
-            #     if secondChance == True:
-            #         userSelectedRadioButton = True
-            #         break
 
             print("Setting goal for:", self.goalToTrack)
             print("Time goal:", self.goalTimeDuration)
@@ -153,15 +140,28 @@ class GoalsFrameSetGoal(tk.Frame):
                 rowNumber = self.findRow() # Call the next function
                 if rowNumber != 9999:
                     print("We found the rownumber: " + str(rowNumber))
-                    # NOW CALL THE NEXT FUNCTION
+                    #hasAGoalAlreadyBeenSet = self.doesThisTimeTagAlreadyHaveAGoal(self, rowNumber)
+                    #NOW CALL THE NEXT FUNCTION
                 else:
                     print("We did not find the row nubmer.")
             else:
                 self.setGoal # Might not be the right move to call this again here?
 
+            hasAGoalAlreadyBeenSet = self.doesThisTimeTagAlreadyHaveAGoal(rowNumber)
+            if hasAGoalAlreadyBeenSet == False:
+                print("Goal has not already been set.  We need to set this goal.")
+            else:
+                print("Goal already set, go back to set a new goal.")
+
+            goalStatusSet = self.changeGoalStatusToSet(rowNumber)
+            if goalStatusSet:
+                print("Confirmed, goal status set in database.")
+
         else:
             self.setGoalButton.config(text = "Confirm Goal") #change button label
 
+
+    ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
     def doesTimeTagExist(self):
         print("Checking if the timeTag exists in the database")
         with open('timeDatabase.csv', mode='r') as timeDatabase:
@@ -173,6 +173,7 @@ class GoalsFrameSetGoal(tk.Frame):
                     return True
             print("Goal not found in database") # All rows searched, goal not found.
             return False
+
 
     ### FIND GOAL ROW IN DATABASE ###
     def findRow(self):
@@ -188,12 +189,98 @@ class GoalsFrameSetGoal(tk.Frame):
                 rowNumber += 1
             print("Goal not found in database") # All rows searched, goal not found.
             return 9999
+        
 
-    ### PRINT GOAL IN TERMINAL (for testing purposes) ###
+    ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
+    def doesThisTimeTagAlreadyHaveAGoal(self, rowNumber):
+        #rowNumber = rowNumber
+        columnNumber = 4
+        print("Checking if a goal has already been set for this timeTag.")
+        with open('timeDatabase.csv', mode='r') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            print("Opened timeDatabase.csv")
+            for index, row in enumerate(csvReader):
+                if index == rowNumber:
+                    if row[columnNumber] == "0":
+                        print("Goal has NOT been set.")
+                        print("rownumber: " + str(rowNumber))
+                        print("colnumber: " + str(columnNumber))
+                        return False
+                    else:
+                        print("Goal has been set already.")
+                        print("rownumber: " + str(rowNumber))
+                        print("colnumber: " + str(columnNumber))
+                        return True
+                    
+    
+    ### CHANGE GOAL STATUS FROM UNSET TO SET ###
+    def changeGoalStatusToSet(self, rowNumber):
+        columnNumber = 4
+        rows = []
+        print("Changing goal set Boolean within Database")
+        with open('timeDatabase.csv', mode='r+') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            print("Opened timeDatabase.csv")
+            for index, row in enumerate(csvReader):
+                if index == rowNumber:
+                    row[columnNumber] = "1"
+                    print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
+                    #return True
+                rows.append(row)
+
+            timeDatabase.seek(0)
+            csvWriter = csv.writer(timeDatabase)
+            csvWriter.writerows(rows)
+        return True
+    
+    ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
+    def checkIfGoalHasBeenReached(self, rowNumber):
+        totalTimeColumn = 3
+        timeAccumulatedColumn = 6
+        valueInTimeColumn = 0
+        valueInTimeAccumulatedColumn = 0
+        print("Checking if a goal has been reached.")
+        with open('timeDatabase.csv', mode='r') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            print("Opened timeDatabase.csv")
+            for index, row in enumerate(csvReader):
+                if index == rowNumber:
+                    valueInTimeColumn = int(row[totalTimeColumn])
+                    valueInTimeAccumulatedColumn = int(row[valueInTimeAccumulatedColumn])
+                    if valueInTimeAccumulatedColumn >= valueInTimeColumn:
+                        return True
+                    else:
+                        return False
+
+
+    ### CHANGE GOAL REACHED STATUS FROM UNREACHED TO GOAL REACHED ###
+    def changeGoalReachedStatus(self, rowNumber):
+        columnNumber = 7
+        rows = []
+        print("Changing goal set Boolean within Database")
+        with open('timeDatabase.csv', mode='r+') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            print("Opened timeDatabase.csv")
+            for index, row in enumerate(csvReader):
+                if index == rowNumber:
+                    row[columnNumber] = "1"
+                    print("Goal reached at row number " + str(rowNumber) + " and column number " + str(columnNumber))
+                    #return True
+                rows.append(row)
+
+            timeDatabase.seek(0)
+            csvWriter = csv.writer(timeDatabase)
+            csvWriter.writerows(rows)       
+        return True
+
+
+    ### PRINT GOAL IN TERMINAL (for debugging purposes) ###
     def printSelectedGoal(self):
         self.printThis = self.selectedGoal.get()
         print("You're setting a goal for:", self.printThis)
 
+
+    ### PRINT GOAL ON GUI (for debugging purposes ###)
     def printSelectedGoalOnGUI(self):
         self.printThisOnScreen = self.selectedGoal.get()
         if self.printThisOnScreen != '':
