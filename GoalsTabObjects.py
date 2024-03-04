@@ -6,6 +6,10 @@ import csv
 
 backgroundColor = "#3A7069"
 
+### CHECK IF GOALS LIST IS EMPTY ###
+def checkIfGoalsListIsEmpty(timeTagOptions):
+    return all(tags == '' for tags in timeTagOptions)
+
 class GoalsFrameSetup(tk.Frame):
     def __init__(self, root, timeTagOptions):
         self.root = root
@@ -22,7 +26,8 @@ class GoalsFrameSetup(tk.Frame):
 
         ### CHECK IF LIST IS EMPTY ###
         listIsEmpty = True
-        listIsEmpty = self.checkIfGoalsListIsEmpty()
+        #listIsEmpty = self.checkIfGoalsListIsEmpty()
+        listIsEmpty = checkIfGoalsListIsEmpty(timeTagOptions)
         if listIsEmpty: 
             print("No TimeTags Exist.  Please populate the database first.")
             self.pleasePopulateTagsList = tk.Label(self.root, text = "Please Populate your Goal Tags in the Tags Tab", font=('MS Sans Serif', 20))
@@ -32,39 +37,16 @@ class GoalsFrameSetup(tk.Frame):
             self.instructions = tk.Label(self.root, text = "Select a category + time goal below:", font=('MS Sans Serif', 20))
             self.instructions.place(relx=.5, rely=.19, anchor = "center")
 
-    ### CHECK IF GOALS LIST IS EMPTY ###
-    def checkIfGoalsListIsEmpty(self):
-        if all(tags == '' for tags in self.timeTagOptions):
-            return True
-        else: 
-            return False
-    
+    # ### CHECK IF GOALS LIST IS EMPTY ###
+    # def checkIfGoalsListIsEmpty(self):
+    #     return all(tags == '' for tags in self.timeTagOptions)
 
 class GoalsFrameSetGoal(tk.Frame):
     def __init__(self, root, timeTagOptions):
         self.root = root
         self.timeTagOptions = timeTagOptions
         self.currentlySettingGoal = False
-
-        ### TIMETAGS VARIABLES ###
-        #timeDatabase = 'timeDatabase.csv'
-        #timeTagOptions = []
-
-        # ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
-        # def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
-        #     with open (timeDatabase, mode = 'r') as timeDatabase:
-        #         csvReader = csv.reader(timeDatabase)
-        #         next(csvReader) # Skip column titles, begin at row below that
-        #         for row in csvReader:
-        #             timeTagOptions.append(row[0])
-        #         print("Finished assembling timeTagOptions list from timeDatabase.")
-        #         print(f"Contents of list: {timeTagOptions}")
-
-        # ### CREATE TIMETAGS LIST FROM DATABASE ###
-        # readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
-
         self.selectedGoal = tk.StringVar(root)
-
         self.selectedTimeGoal = tk.StringVar(root)
 
         style = ttk.Style()
@@ -90,7 +72,7 @@ class GoalsFrameSetGoal(tk.Frame):
 
         ### CHECK IF LIST IS EMPTY ###
         listIsEmpty = True
-        listIsEmpty = self.checkIfGoalsListIsEmpty()
+        listIsEmpty = checkIfGoalsListIsEmpty(timeTagOptions)
         if listIsEmpty: 
             print("No TimeTags Exist.  Please populate the database first.")
             self.setGoalButton.config(text="Please populate Tags in Tags Menu", state="disabled")
@@ -103,12 +85,12 @@ class GoalsFrameSetGoal(tk.Frame):
             print("TimeTags have been populated.  List is NOT empty.")
 
 
-    ### CHECK IF GOALS LIST IS EMPTY FUNCTION ###
-    def checkIfGoalsListIsEmpty(self):
-        if all(tags == '' for tags in self.timeTagOptions):
-            return True
-        else: 
-            return False
+    # ### CHECK IF GOALS LIST IS EMPTY FUNCTION ###
+    # def checkIfGoalsListIsEmpty(self):
+    #     if all(tags == '' for tags in self.timeTagOptions):
+    #         return True
+    #     else: 
+    #         return False
     
 
     ## CHECK IF USER SELECTED A RADIO BUTTON FUNCTION ###
@@ -156,6 +138,8 @@ class GoalsFrameSetGoal(tk.Frame):
             goalStatusSet = self.changeGoalStatusToSet(rowNumber)
             if goalStatusSet:
                 print("Confirmed, goal status set in database.")
+
+            #hasMyGoalBeenReached = hasGoalBeenReached
 
         else:
             self.setGoalButton.config(text = "Confirm Goal") #change button label
@@ -234,6 +218,7 @@ class GoalsFrameSetGoal(tk.Frame):
         return True
     
     ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
+    ### HAVE NOT TESTED THIS FUNCTION YET! ###
     def checkIfGoalHasBeenReached(self, rowNumber):
         totalTimeColumn = 3
         timeAccumulatedColumn = 6
@@ -248,8 +233,10 @@ class GoalsFrameSetGoal(tk.Frame):
                     valueInTimeColumn = int(row[totalTimeColumn])
                     valueInTimeAccumulatedColumn = int(row[valueInTimeAccumulatedColumn])
                     if valueInTimeAccumulatedColumn >= valueInTimeColumn:
+                        print("You have achieved your goal.")
                         return True
                     else:
+                        print("You have not achieved your goal yet.  Keep at it.")
                         return False
 
 
