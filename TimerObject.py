@@ -19,9 +19,6 @@ class TimerFrame(tk.Frame):
         self.photo1 = PhotoImage(file=IMAGE) #TODO: Figure out how to make corners transparent
         self.image1.create_image((1, 1), anchor='nw',image= self.photo1)
 
-        self.label = tk.Label(self.root, text = "Click start to begin", font=('MS Sans Serif', 20), bg= backgroundColor)
-        self.label.place(relx=.5, rely=.1, anchor="center")
-
 
 #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
 class Timer(TimerFrame):
@@ -44,6 +41,9 @@ class Timer(TimerFrame):
         self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
 
+        self.label = tk.Label(self.root, text = "Click start to begin", font=('MS Sans Serif', 20), bg= backgroundColor)
+        self.label.place(relx=.5, rely=.1, anchor="center")
+
     def generateString(self, newCurrentTime):
         currentSecond = newCurrentTime % 60
         currentMinute = newCurrentTime // 60 #// = "floor divide"
@@ -59,16 +59,28 @@ class Timer(TimerFrame):
             self.button.config(text = "Stop") #change button label
             threading.Thread(target=self.countUp).start() #start new thread to count
 
+            #Create and destroy thread
+            threading.Thread(target=self.countUp).join()
         else:
             self.button.config(text = "Start") #change button label
 
     def countUp(self):
+        print("Start counting")
         startTime = time.time() #grabs the current time in seconds
 
-        self.label.place_forget() #Tried to exetend the class but its not removing the label????
+        #make things dissappear
+        self.goalDropdownMenu.place_forget()
+        self.label.place_forget() 
+        self.button.place(relx= 0.5, rely = 0.8, anchor='center')
 
         while self.currentlyRunning:
             self.timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
             self.timerLabel.config(text = self.generateString(self.timePassed))
+            time.sleep(0.001)
 
         self.timerLabel.config(text = self.generateString(0.0))
+
+        #replace everything on screen
+        self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center") 
+        self.label.place(relx=.5, rely=.1, anchor="center")
+        self.button.place(relx= 0.5, rely = 0.9, anchor='n')
