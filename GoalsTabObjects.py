@@ -10,11 +10,39 @@ backgroundColor = "#3A7069"
 def checkIfGoalsListIsEmpty(timeTagOptions):
     return all(tags == '' for tags in timeTagOptions)
 
+### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
+def doesTimeTagExist(goalToTrack):
+    print("Checking if the timeTag exists in the database")
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        for row in csvReader:
+            if row[0] == goalToTrack:
+                print("Goal found in database")
+                return True
+        print("Goal not found in database") # All rows searched, goal not found.
+        return False
+
+### FIND GOAL ROW IN DATABASE ###
+def findRow(goalToTrack):
+    print("Entered the findRow function.")
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        rowNumber = 0
+        for row in csvReader:
+            if row[0] == goalToTrack:
+                print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
+                return rowNumber
+            rowNumber += 1
+        print("Goal not found in database") # All rows searched, goal not found.
+        return 9999
+
+### GOALSFRAMESETUP CLASS ###
 class GoalsFrameSetup(tk.Frame):
     def __init__(self, root, timeTagOptions):
         self.root = root
         self.timeTagOptions = timeTagOptions
-
         self.image = Image.open("graphPaper.jpg")
         self.photo_image = ImageTk.PhotoImage(self.image)
 
@@ -26,7 +54,6 @@ class GoalsFrameSetup(tk.Frame):
 
         ### CHECK IF LIST IS EMPTY ###
         listIsEmpty = True
-        #listIsEmpty = self.checkIfGoalsListIsEmpty()
         listIsEmpty = checkIfGoalsListIsEmpty(timeTagOptions)
         if listIsEmpty: 
             print("No TimeTags Exist.  Please populate the database first.")
@@ -37,10 +64,8 @@ class GoalsFrameSetup(tk.Frame):
             self.instructions = tk.Label(self.root, text = "Select a category + time goal below:", font=('MS Sans Serif', 20))
             self.instructions.place(relx=.5, rely=.19, anchor = "center")
 
-    # ### CHECK IF GOALS LIST IS EMPTY ###
-    # def checkIfGoalsListIsEmpty(self):
-    #     return all(tags == '' for tags in self.timeTagOptions)
 
+### GOALSFRAMESETGOAL CLASS ###
 class GoalsFrameSetGoal(tk.Frame):
     def __init__(self, root, timeTagOptions):
         self.root = root
@@ -85,14 +110,6 @@ class GoalsFrameSetGoal(tk.Frame):
             print("TimeTags have been populated.  List is NOT empty.")
 
 
-    # ### CHECK IF GOALS LIST IS EMPTY FUNCTION ###
-    # def checkIfGoalsListIsEmpty(self):
-    #     if all(tags == '' for tags in self.timeTagOptions):
-    #         return True
-    #     else: 
-    #         return False
-    
-
     ## CHECK IF USER SELECTED A RADIO BUTTON FUNCTION ###
     def didUserSelectARadioButton(self):
         if self.selectedTimeGoal.get() == "":
@@ -103,6 +120,7 @@ class GoalsFrameSetGoal(tk.Frame):
         else:
             self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
             self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
+
 
     ### SET GOAL FUNCTION ###
     def setGoal(self):
@@ -117,9 +135,9 @@ class GoalsFrameSetGoal(tk.Frame):
             print("Time goal:", self.goalTimeDuration)
             self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
 
-            goalExistsInDatabase = self.doesTimeTagExist()
+            goalExistsInDatabase = doesTimeTagExist(self.goalToTrack)
             if goalExistsInDatabase:
-                rowNumber = self.findRow() # Call the next function
+                rowNumber = findRow(self.goalToTrack) # Call the next function
                 if rowNumber != 9999:
                     print("We found the rownumber: " + str(rowNumber))
                     #hasAGoalAlreadyBeenSet = self.doesThisTimeTagAlreadyHaveAGoal(self, rowNumber)
@@ -145,34 +163,34 @@ class GoalsFrameSetGoal(tk.Frame):
             self.setGoalButton.config(text = "Confirm Goal") #change button label
 
 
-    ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
-    def doesTimeTagExist(self):
-        print("Checking if the timeTag exists in the database")
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            print("Opened timeDatabase.csv")
-            for row in csvReader:
-                if row[0] == self.goalToTrack:
-                    print("Goal found in database")
-                    return True
-            print("Goal not found in database") # All rows searched, goal not found.
-            return False
+    # ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
+    # def doesTimeTagExist(self):
+    #     print("Checking if the timeTag exists in the database")
+    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
+    #         csvReader = csv.reader(timeDatabase)
+    #         print("Opened timeDatabase.csv")
+    #         for row in csvReader:
+    #             if row[0] == self.goalToTrack:
+    #                 print("Goal found in database")
+    #                 return True
+    #         print("Goal not found in database") # All rows searched, goal not found.
+    #         return False
 
 
-    ### FIND GOAL ROW IN DATABASE ###
-    def findRow(self):
-        print("Entered the findRow function.")
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            print("Opened timeDatabase.csv")
-            rowNumber = 0
-            for row in csvReader:
-                if row[0] == self.goalToTrack:
-                    print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
-                    return rowNumber
-                rowNumber += 1
-            print("Goal not found in database") # All rows searched, goal not found.
-            return 9999
+    # ### FIND GOAL ROW IN DATABASE ###
+    # def findRow(self):
+    #     print("Entered the findRow function.")
+    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
+    #         csvReader = csv.reader(timeDatabase)
+    #         print("Opened timeDatabase.csv")
+    #         rowNumber = 0
+    #         for row in csvReader:
+    #             if row[0] == self.goalToTrack:
+    #                 print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
+    #                 return rowNumber
+    #             rowNumber += 1
+    #         print("Goal not found in database") # All rows searched, goal not found.
+    #         return 9999
         
 
     ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
