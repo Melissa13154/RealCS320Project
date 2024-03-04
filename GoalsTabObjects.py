@@ -3,6 +3,7 @@ from tkinter import ttk
 import PIL
 from PIL import Image, ImageTk
 import csv
+import time
 
 backgroundColor = "#3A7069"
 
@@ -34,7 +35,7 @@ class GoalsFrameSetup(tk.Frame):
 
     ### CHECK IF GOALS LIST IS EMPTY ###
     def checkIfGoalsListIsEmpty(self):
-        if len(self.timeTagOptions) == 0:
+        if all(tags == '' for tags in self.timeTagOptions):
             return True
         else: 
             return False
@@ -84,9 +85,44 @@ class GoalsFrameSetGoal(tk.Frame):
         self.sixtyMins = ttk.Radiobutton(root, text="60 mins", variable=self.selectedTimeGoal, value="60")
         self.sixtyMins.place(relx=.7, rely=.30)
 
-        self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
+        self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.didUserSelectARadioButton)
+        #self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
+
+        ### CHECK IF LIST IS EMPTY ###
+        listIsEmpty = True
+        listIsEmpty = self.checkIfGoalsListIsEmpty()
+        if listIsEmpty: 
+            print("No TimeTags Exist.  Please populate the database first.")
+            self.setGoalButton.config(text="Please populate Tags in Tags Menu", state="disabled")
+            self.goalDropdownMenu.config(state="disabled")
+            self.fifteenMins.config(state="disabled")
+            self.thirtyMins.config(state="disabled")
+            self.fortyFiveMins.config(state="disabled")
+            self.sixtyMins.config(state="disabled")
+        else:
+            print("TimeTags have been populated.  List is NOT empty.")
+
+
+    ### CHECK IF GOALS LIST IS EMPTY FUNCTION ###
+    def checkIfGoalsListIsEmpty(self):
+        if all(tags == '' for tags in self.timeTagOptions):
+            return True
+        else: 
+            return False
+    
+
+    ## CHECK IF USER SELECTED A RADIO BUTTON FUNCTION ###
+    def didUserSelectARadioButton(self):
+        if self.selectedTimeGoal.get() == "":
+            print("User did not select time Goal")
+            if self.didUserSelectARadioButton == True:
+                self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
+                self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
+        else:
+            self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
+            self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
     ### SET GOAL FUNCTION ###
     def setGoal(self):
@@ -95,29 +131,63 @@ class GoalsFrameSetGoal(tk.Frame):
         if(self.currentlySettingGoal):
             self.goalToTrack = self.selectedGoal.get()
             self.goalTimeDuration = self.selectedTimeGoal.get()
+
+            #userSelectedRadioButton = self.didUserSelectARadioButton()
+
+            # while userSelectedRadioButton == False:
+            #     print("Error, you didn't select a time goal.  Please select one now.")
+            #     self.goalTimeDuration = self.selectedTimeGoal.get()
+            #     time.sleep(5)
+            #     print("Done waiting for 5 seconds")
+            #     secondChance = self.didUserSelectARadioButton()
+            #     if secondChance == True:
+            #         userSelectedRadioButton = True
+            #         break
+
             print("Setting goal for:", self.goalToTrack)
             print("Time goal:", self.goalTimeDuration)
             self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
-            self.checkIfGoalAlreadyExists() # Call the next function
+
+            goalExistsInDatabase = self.doesTimeTagExist()
+            if goalExistsInDatabase:
+                rowNumber = self.findRow() # Call the next function
+                if rowNumber != 9999:
+                    print("We found the rownumber: " + str(rowNumber))
+                    # NOW CALL THE NEXT FUNCTION
+                else:
+                    print("We did not find the row nubmer.")
+            else:
+                self.setGoal # Might not be the right move to call this again here?
 
         else:
             self.setGoalButton.config(text = "Confirm Goal") #change button label
-        
+
+    def doesTimeTagExist(self):
+        print("Checking if the timeTag exists in the database")
+        with open('timeDatabase.csv', mode='r') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            print("Opened timeDatabase.csv")
+            for row in csvReader:
+                if row[0] == self.goalToTrack:
+                    print("Goal found in database")
+                    return True
+            print("Goal not found in database") # All rows searched, goal not found.
+            return False
+
     ### FIND GOAL ROW IN DATABASE ###
-    def checkIfGoalAlreadyExists(self):
-        print("Entered the checkIfGoalAlreadyExists function.")
+    def findRow(self):
+        print("Entered the findRow function.")
         with open('timeDatabase.csv', mode='r') as timeDatabase:
             csvReader = csv.reader(timeDatabase)
             print("Opened timeDatabase.csv")
             rowNumber = 0
             for row in csvReader:
                 if row[0] == self.goalToTrack:
-                    print("Goal found in database")
                     print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
-                    return
+                    return rowNumber
                 rowNumber += 1
             print("Goal not found in database") # All rows searched, goal not found.
-            return
+            return 9999
 
     ### PRINT GOAL IN TERMINAL (for testing purposes) ###
     def printSelectedGoal(self):

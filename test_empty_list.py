@@ -1,2 +1,5 @@
+from GoalsTabObjects import GoalsFrameSetup
+
 def test_is_goaltag_list_empty():
-    pass
+    goalFrame = GoalsFrameSetup
+    assert goalFrame.checkIfGoalsListIsEmpty(self)
