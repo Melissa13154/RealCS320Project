@@ -11,3 +11,7 @@ def test_is_goaltag_list_empty_notempty():
 def test_is_goaltag_list_empty_mixed():
     timeTagOptions3 = ['read', '', 'run', '']
     assert not checkIfGoalsListIsEmpty(timeTagOptions3)
+
+def test_is_goaltag_list_empty_completelyempty():
+    timeTagOptions4 = []
+    assert checkIfGoalsListIsEmpty(timeTagOptions4)

@@ -37,6 +37,27 @@ def findRow(goalToTrack):
             rowNumber += 1
         print("Goal not found in database") # All rows searched, goal not found.
         return 9999
+    
+### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
+def checkIfGoalHasBeenReached(rowNumber):
+    totalTimeColumn = 3
+    timeAccumulatedColumn = 6
+    valueInTimeColumn = 0
+    valueInTimeAccumulatedColumn = 0
+    print("Checking if a goal has been reached.")
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                valueInTimeColumn = int(row[totalTimeColumn])
+                valueInTimeAccumulatedColumn = int(row[timeAccumulatedColumn])
+                if ((valueInTimeAccumulatedColumn >= valueInTimeColumn) and (valueInTimeColumn != 0) and (valueInTimeAccumulatedColumn != 0)):
+                    print("You have achieved your goal.")
+                    return True
+                else:
+                    print("You have not achieved your goal yet.  Keep at it.")
+                    return False
 
 ### GOALSFRAMESETUP CLASS ###
 class GoalsFrameSetup(tk.Frame):
@@ -157,7 +178,10 @@ class GoalsFrameSetGoal(tk.Frame):
             if goalStatusSet:
                 print("Confirmed, goal status set in database.")
 
-            #hasMyGoalBeenReached = hasGoalBeenReached
+            hasMyGoalBeenReached = checkIfGoalHasBeenReached(self.rowNumber)
+            #print("value of hasmygoalbeenreached: " + hasMyGoalBeenReached)
+            if (hasMyGoalBeenReached):
+                print("You've reached your goal.")
 
         else:
             self.setGoalButton.config(text = "Confirm Goal") #change button label
@@ -176,22 +200,6 @@ class GoalsFrameSetGoal(tk.Frame):
     #         print("Goal not found in database") # All rows searched, goal not found.
     #         return False
 
-
-    # ### FIND GOAL ROW IN DATABASE ###
-    # def findRow(self):
-    #     print("Entered the findRow function.")
-    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
-    #         csvReader = csv.reader(timeDatabase)
-    #         print("Opened timeDatabase.csv")
-    #         rowNumber = 0
-    #         for row in csvReader:
-    #             if row[0] == self.goalToTrack:
-    #                 print(f"Goal found on row: {rowNumber} (row 0 is column titles).")
-    #                 return rowNumber
-    #             rowNumber += 1
-    #         print("Goal not found in database") # All rows searched, goal not found.
-    #         return 9999
-        
 
     ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
     def doesThisTimeTagAlreadyHaveAGoal(self, rowNumber):
@@ -235,27 +243,26 @@ class GoalsFrameSetGoal(tk.Frame):
             csvWriter.writerows(rows)
         return True
     
-    ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
-    ### HAVE NOT TESTED THIS FUNCTION YET! ###
-    def checkIfGoalHasBeenReached(self, rowNumber):
-        totalTimeColumn = 3
-        timeAccumulatedColumn = 6
-        valueInTimeColumn = 0
-        valueInTimeAccumulatedColumn = 0
-        print("Checking if a goal has been reached.")
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            print("Opened timeDatabase.csv")
-            for index, row in enumerate(csvReader):
-                if index == rowNumber:
-                    valueInTimeColumn = int(row[totalTimeColumn])
-                    valueInTimeAccumulatedColumn = int(row[valueInTimeAccumulatedColumn])
-                    if valueInTimeAccumulatedColumn >= valueInTimeColumn:
-                        print("You have achieved your goal.")
-                        return True
-                    else:
-                        print("You have not achieved your goal yet.  Keep at it.")
-                        return False
+    # ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
+    # def checkIfGoalHasBeenReached(self, rowNumber):
+    #     totalTimeColumn = 3
+    #     timeAccumulatedColumn = 6
+    #     valueInTimeColumn = 0
+    #     valueInTimeAccumulatedColumn = 0
+    #     print("Checking if a goal has been reached.")
+    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
+    #         csvReader = csv.reader(timeDatabase)
+    #         print("Opened timeDatabase.csv")
+    #         for index, row in enumerate(csvReader):
+    #             if index == rowNumber:
+    #                 valueInTimeColumn = int(row[totalTimeColumn])
+    #                 valueInTimeAccumulatedColumn = int(row[timeAccumulatedColumn])
+    #                 if ((valueInTimeAccumulatedColumn >= valueInTimeColumn) and (valueInTimeColumn != 0) and (valueInTimeAccumulatedColumn != 0)):
+    #                     print("You have achieved your goal.")
+    #                     return True
+    #                 else:
+    #                     print("You have not achieved your goal yet.  Keep at it.")
+    #                     return False
 
 
     ### CHANGE GOAL REACHED STATUS FROM UNREACHED TO GOAL REACHED ###
