@@ -242,27 +242,6 @@ class GoalsFrameSetGoal(tk.Frame):
             csvWriter = csv.writer(timeDatabase)
             csvWriter.writerows(rows)
         return True
-    
-    # ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
-    # def checkIfGoalHasBeenReached(self, rowNumber):
-    #     totalTimeColumn = 3
-    #     timeAccumulatedColumn = 6
-    #     valueInTimeColumn = 0
-    #     valueInTimeAccumulatedColumn = 0
-    #     print("Checking if a goal has been reached.")
-    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
-    #         csvReader = csv.reader(timeDatabase)
-    #         print("Opened timeDatabase.csv")
-    #         for index, row in enumerate(csvReader):
-    #             if index == rowNumber:
-    #                 valueInTimeColumn = int(row[totalTimeColumn])
-    #                 valueInTimeAccumulatedColumn = int(row[timeAccumulatedColumn])
-    #                 if ((valueInTimeAccumulatedColumn >= valueInTimeColumn) and (valueInTimeColumn != 0) and (valueInTimeAccumulatedColumn != 0)):
-    #                     print("You have achieved your goal.")
-    #                     return True
-    #                 else:
-    #                     print("You have not achieved your goal yet.  Keep at it.")
-    #                     return False
 
 
     ### CHANGE GOAL REACHED STATUS FROM UNREACHED TO GOAL REACHED ###
