@@ -12,7 +12,7 @@ import databaseInit
 
 ### DETAILS ###
 TK_SILENCE_DEPRECATION=1 # Supress warnings
-backgroundColor = "#3A7069"
+backgroundColor = "#87ccab"
 
 ### OUTERFRAME CLASS ###
 class OuterFrame:
@@ -24,8 +24,11 @@ class OuterFrame:
     ### CREATE INSTANCE OF NOTEBOOK ###
     notebook = ttk.Notebook(root)
 
+    s = ttk.Style()
+    s.configure('new.TFrame', background = backgroundColor)
+
     ### CREATE TABS ###
-    mainTab = ttk.Frame(notebook)
+    mainTab = ttk.Frame(notebook, style='new.TFrame')
     tagsTab = ttk.Frame(notebook)
     goalsTab = ttk.Frame(notebook)
 
@@ -89,8 +92,7 @@ def main():
     # outerFrame = OuterFrame()
 
     #mainTab
-    mainFrame = TimerObject.TimerFrame(outerFrame.mainTab)
-    timer = TimerObject.Timer(outerFrame.mainTab, timeTagOptions)
+    mainFrame = TimerObject.TimerFrame(outerFrame.mainTab, timeTagOptions)
 
     #tagsTab
     tagBtn = TimerTags.CreateTags(outerFrame.tagsTab)
