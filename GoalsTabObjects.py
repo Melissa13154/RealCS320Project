@@ -178,7 +178,7 @@ class GoalsFrameSetGoal(tk.Frame):
             if goalStatusSet:
                 print("Confirmed, goal status set in database.")
 
-            hasMyGoalBeenReached = checkIfGoalHasBeenReached(self.rowNumber)
+            hasMyGoalBeenReached = checkIfGoalHasBeenReached(rowNumber)
             #print("value of hasmygoalbeenreached: " + hasMyGoalBeenReached)
             if (hasMyGoalBeenReached):
                 print("You've reached your goal.")
