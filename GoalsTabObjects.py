@@ -41,6 +41,45 @@ def findRow(goalToTrack):
         return 9999
 
 
+### RETURN CURRENT STORED TIME ###
+def returnCurrentStoredTime(rowNumber):
+    columnNumber = 1
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                currentStoredTime = row[columnNumber]
+                print("Current stored time: " + currentStoredTime)
+                print("rownumber: " + str(rowNumber))
+                print("colnumber: " + str(columnNumber))
+                return float(currentStoredTime)
+
+
+### CALCULATE UPDATED STORED TIME ###
+def calculateUpdatedStoredTime(currentStoredTime, newlyTrackedTimeBlock):
+    updatedStoredTime = float(currentStoredTime) + float(newlyTrackedTimeBlock)
+    return float(updatedStoredTime)
+
+
+### UPDATE NEW TIME IN DATABASE ###
+def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
+    columnNumber = 1
+    rows = []
+    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                row[columnNumber] = str(updatedStoredTime)
+                print("Updated time: " + str(updatedStoredTime))
+                print("rownumber: " + str(rowNumber))
+                print("colnumber: " + str(columnNumber))
+            rows.append(row)
+        timeDatabase.seek(0)
+        csvWriter = csv.writer(timeDatabase)
+        csvWriter.writerows(rows)
+        return True
+
+
 ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
 def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
     columnNumber = 4
@@ -64,8 +103,8 @@ def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
 
 ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
 def checkIfGoalHasBeenReached(rowNumber):
-    totalTimeColumn = 3
-    timeAccumulatedColumn = 6
+    totalTimeColumn = 1
+    timeAccumulatedColumn = 4
     valueInTimeColumn = 0
     valueInTimeAccumulatedColumn = 0
     print("Checking if a goal has been reached.")
