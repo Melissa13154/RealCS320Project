@@ -4,6 +4,7 @@ from GoalsTabObjects import calculateUpdatedStoredTime
 from GoalsTabObjects import updateStoredTimeInDatabase
 from GoalsTabObjects import countTimeTagsInDatabase
 from GoalsTabObjects import enterNewTupleInDatabase
+from GoalsTabObjects import checkForDuplicateTimeTag
 
 ### VARIABLES ###
 goal = "walk"
@@ -28,6 +29,11 @@ if updateStatus:
 ### COUNT TIMETAGS IN DATABASE
 numberOfGoals = countTimeTagsInDatabase()
 print("Number of goals in database: " + str(numberOfGoals))
+
+checkThisTimeTag = "walk"
+duplicateCheckStatus = checkForDuplicateTimeTag(checkThisTimeTag)
+if duplicateCheckStatus:
+    print("Sorry, this tag already exists in the database.")
 
 ### ENTER NEW TUPLE IN DATABASE
 timeTag = "rock this week"

@@ -156,6 +156,19 @@ def enterNewTupleInDatabase(timeTag):
             return False
 
 
+### CHECK FOR DUPLICATE TIMETAG ENTRY ###
+def checkForDuplicateTimeTag(timeTag):
+    timeTagColumn = 0
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for row in csvReader:
+            if row[timeTagColumn] == timeTag:
+                print("This timetag already exists in the database.")
+                return True
+    print("This timetag is unique and new.  Go ahead and run the enterNewTupleInDatabase function.")
+    return False
+
+
 ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
 def checkIfGoalHasBeenReached(rowNumber):
     totalTimeColumn = 1
