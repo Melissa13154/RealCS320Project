@@ -57,9 +57,13 @@ class TimerFrame(tk.Frame):
         if(self.currentlyRunning):
             self.goalToTrack = self.selectedGoal.get()
 
-            if(self.doesTimeTagExist() == False):
+            self.currentGoal = self.currentStoredTime(self.goalToTrack)
+
+            if(self.doesTimeTagExist() == False or self.currentGoal <= 0.00):
                 self.currentlyRunning = not self.currentlyRunning
+                self.currentGoal = -1.0
                 return
+    
 
             print(f"Goal selected: {self.goalToTrack}")
             self.button.config(text = "Stop") #change button label
@@ -139,14 +143,11 @@ class TimerFrame(tk.Frame):
     
 #---------------------------------------------------------------------------
 
-    def currentStoredTime(rowNumber):
-        columnNumber = 1
+    def currentStoredTime(self, goalToTrack):
         with open('timeDatabase.csv', mode='r') as timeDatabase:
             csvReader = csv.reader(timeDatabase)
-            for index, row in enumerate(csvReader):
-                if index == rowNumber:
-                    currentStoredTime = row[columnNumber]
+            for row in csvReader:
+                if row[0] == goalToTrack:
+                    currentStoredTime = row[1]
                     print("Current stored time: " + currentStoredTime)
-                    # print("rownumber: " + str(rowNumber))
-                    # print("colnumber: " + str(columnNumber))
                     return float(currentStoredTime)
