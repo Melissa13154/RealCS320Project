@@ -43,22 +43,23 @@ class OuterFrame:
 ### CREATE DATABASE ONCE ###
 #timerDB = databaseInit.DB()
     
+### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
+def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
+    with open (timeDatabase, mode = 'r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        next(csvReader) # Skip column titles, begin at row below that
+        for row in csvReader:
+            timeTagOptions.append(row[0])
+        print("Finished assembling timeTagOptions list from timeDatabase.")
+        print(f"Contents of list: {timeTagOptions}")
+    
+
 ### RUN THIS TO INIITIALIZE ###
 def initialize():
 
-### TIMETAGS VARIABLES ###
+    ### TIMETAGS VARIABLES ###
     timeDatabase = 'timeDatabase.csv'
     timeTagOptions = []
-
-    ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
-    def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
-        with open (timeDatabase, mode = 'r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            next(csvReader) # Skip column titles, begin at row below that
-            for row in csvReader:
-                timeTagOptions.append(row[0])
-            print("Finished assembling timeTagOptions list from timeDatabase.")
-            print(f"Contents of list: {timeTagOptions}")
 
     ### CREATE TIMETAGS LIST FROM DATABASE ###
     readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)

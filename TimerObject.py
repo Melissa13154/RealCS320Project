@@ -4,7 +4,7 @@ import time
 import threading
 from tkinter import Canvas
 from tkinter import PhotoImage
-from tkinter.ttk import Notebook, Style
+import csv
 
 #IDEA: Open associated application with menu button
 
@@ -40,7 +40,7 @@ class TimerFrame(tk.Frame):
         self.goalDropdownMenu.config(bg='#FFD9B7')
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
-        self.currentGoal = 5.00 #must be float
+        self.currentGoal = 0.00
 
         self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
@@ -51,26 +51,55 @@ class TimerFrame(tk.Frame):
 #--------------------------------------------------------------------------------------------------  
 
     def startStop(self):
+        
         self.currentlyRunning = not self.currentlyRunning
 
         if(self.currentlyRunning):
             self.goalToTrack = self.selectedGoal.get()
+
+            if(self.doesTimeTagExist() == False):
+                self.currentlyRunning = not self.currentlyRunning
+                return
+
             print(f"Goal selected: {self.goalToTrack}")
             self.button.config(text = "Stop") #change button label
+            self.removeWidgets()
             threading.Thread(target=self.countUp).start() #start new thread to count
         else:
             self.button.config(text = "Start") #change button label
             # threading.Thread(target=self.countUp).join() #wait for thread to kill
+            self.replaceWidgets()
+
+
+    def removeWidgets(self):
+        self.goalDropdownMenu.place_forget()
+        self.label.place_forget() 
+        self.button.place(relx= 0.5, rely = 0.8, anchor='center')
+
+#---------------------------------------------------------------------------------------------------
+
+    def replaceWidgets(self):
+        self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center") 
+        self.label.place(relx=.5, rely=.1, anchor="center")
+        self.button.place(relx= 0.5, rely = 0.9, anchor='n')
 
 #-------------------------------------------------------------------------------------------
             
     def changeImage(self, timePassed):
         if(timePassed/self.currentGoal > 1.00):
             self.canvas.itemconfig(self.imageNum, image=self.photo4)
+            return 4
         elif(timePassed/self.currentGoal > 0.50):
             self.canvas.itemconfig(self.imageNum, image=self.photo3)
+            return 3
         elif(timePassed/self.currentGoal > 0.25):
             self.canvas.itemconfig(self.imageNum, image=self.photo2)
+            return 2
+        elif(timePassed/self.currentGoal >= 0.00):
+            self.canvas.itemconfig(self.imageNum, image=self.photo1)
+            return 1
+        else:
+            return -1
 
 #----------------------------------------------------------------------------------------------------
 
@@ -85,11 +114,6 @@ class TimerFrame(tk.Frame):
     def countUp(self):
         startTime = time.time() #grabs the current time in seconds
 
-        #make things disappear
-        self.goalDropdownMenu.place_forget()
-        self.label.place_forget() 
-        self.button.place(relx= 0.5, rely = 0.8, anchor='center')
-
         while self.currentlyRunning:
             timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
             self.timerLabel.config(text = self.generateString(timePassed))
@@ -99,9 +123,30 @@ class TimerFrame(tk.Frame):
 
         self.timerLabel.config(text = self.generateString(0.0))
 
-        #replace everything on screen
-        self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center") 
-        self.label.place(relx=.5, rely=.1, anchor="center")
-        self.button.place(relx= 0.5, rely = 0.9, anchor='n')
+#------------------------------------------------------------------------------------
 
+    def doesTimeTagExist(self):
+        # print("Checking if the timeTag exists in the database")
+        with open('timeDatabase.csv', mode='r') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            # print("Opened timeDatabase.csv")
+            for row in csvReader:
+                if row[0] == self.selectedGoal.get():
+                    print("Goal found in database")
+                    return True
+            print("Goal not found in database") # All rows searched, goal not found.
+            return False
+    
+#---------------------------------------------------------------------------
 
+    def currentStoredTime(rowNumber):
+        columnNumber = 1
+        with open('timeDatabase.csv', mode='r') as timeDatabase:
+            csvReader = csv.reader(timeDatabase)
+            for index, row in enumerate(csvReader):
+                if index == rowNumber:
+                    currentStoredTime = row[columnNumber]
+                    print("Current stored time: " + currentStoredTime)
+                    # print("rownumber: " + str(rowNumber))
+                    # print("colnumber: " + str(columnNumber))
+                    return float(currentStoredTime)

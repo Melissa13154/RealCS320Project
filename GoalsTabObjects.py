@@ -106,7 +106,7 @@ def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
     columnNumber = 3
     rows = []
     print("Changing goal set Boolean within Database")
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
