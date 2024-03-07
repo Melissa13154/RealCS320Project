@@ -17,7 +17,7 @@ class DB:
         query = "USE Timer;"
         cursor.execute(query)
         connection.commit()
-        query = "CREATE TABLE Records(\
+        query = "CREATE TABLE IF NOT EXISTS Records(\
                     date DATETIME,\
                     tag VARCHAR(20),\
                     duration TIME,\
