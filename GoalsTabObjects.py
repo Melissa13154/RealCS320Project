@@ -10,6 +10,7 @@ backgroundColor = "#3A7069"
 def checkIfGoalsListIsEmpty(timeTagOptions):
     return all(tags == '' for tags in timeTagOptions)
 
+
 ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
 def doesTimeTagExist(goalToTrack):
     print("Checking if the timeTag exists in the database")
@@ -22,6 +23,7 @@ def doesTimeTagExist(goalToTrack):
                 return True
         print("Goal not found in database") # All rows searched, goal not found.
         return False
+
 
 ### FIND GOAL ROW IN DATABASE ###
 def findRow(goalToTrack):
@@ -37,11 +39,72 @@ def findRow(goalToTrack):
             rowNumber += 1
         print("Goal not found in database") # All rows searched, goal not found.
         return 9999
-    
+
+
+### RETURN CURRENT STORED TIME ###
+def returnCurrentStoredTime(rowNumber):
+    columnNumber = 1
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                currentStoredTime = row[columnNumber]
+                print("Current stored time: " + currentStoredTime)
+                print("rownumber: " + str(rowNumber))
+                print("colnumber: " + str(columnNumber))
+                return float(currentStoredTime)
+
+
+### CALCULATE UPDATED STORED TIME ###
+def calculateUpdatedStoredTime(currentStoredTime, newlyTrackedTimeBlock):
+    updatedStoredTime = float(currentStoredTime) + float(newlyTrackedTimeBlock)
+    return float(updatedStoredTime)
+
+
+### UPDATE NEW TIME IN DATABASE ###
+def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
+    columnNumber = 1
+    rows = []
+    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                row[columnNumber] = str(updatedStoredTime)
+                print("Updated time: " + str(updatedStoredTime))
+                print("rownumber: " + str(rowNumber))
+                print("colnumber: " + str(columnNumber))
+            rows.append(row)
+        timeDatabase.seek(0)
+        csvWriter = csv.writer(timeDatabase)
+        csvWriter.writerows(rows)
+        return True
+
+
+### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
+def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
+    columnNumber = 4
+    print("Checking if a goal has already been set for this timeTag.")
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                if row[columnNumber] == "0":
+                    print("Goal has NOT been set.")
+                    print("rownumber: " + str(rowNumber))
+                    print("colnumber: " + str(columnNumber))
+                    return False
+                else:
+                    print("Goal has been set already.")
+                    print("rownumber: " + str(rowNumber))
+                    print("colnumber: " + str(columnNumber))
+                    return True
+
+
 ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
 def checkIfGoalHasBeenReached(rowNumber):
-    totalTimeColumn = 3
-    timeAccumulatedColumn = 6
+    totalTimeColumn = 1
+    timeAccumulatedColumn = 4
     valueInTimeColumn = 0
     valueInTimeAccumulatedColumn = 0
     print("Checking if a goal has been reached.")
@@ -112,7 +175,7 @@ class GoalsFrameSetGoal(tk.Frame):
         self.sixtyMins = ttk.Radiobutton(root, text="60 mins", variable=self.selectedTimeGoal, value="60")
         self.sixtyMins.place(relx=.7, rely=.30)
 
-        self.setGoalButton = ttk.Button(root, text="Initialize", command=self.didUserSelectARadioButton)
+        self.setGoalButton = ttk.Button(root, text="Set Goal", command=self.didUserSelectARadioButton)
         #self.setGoalButton = ttk.Button(root, text="Confirm Goal", command=self.setGoal)
         self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
@@ -138,15 +201,17 @@ class GoalsFrameSetGoal(tk.Frame):
             if self.didUserSelectARadioButton == True:
                 self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
                 self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
-        else:
-            self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
-            self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
+        else: # User did set a goal, call setGoal function
+            self.setGoal()
+            #self.setGoalButton = ttk.Button(self.root, text="Confirm Goal", command=self.setGoal)
+            #self.setGoalButton.place(relx=0.5, rely=0.37, anchor = "center")
 
 
     ### SET GOAL FUNCTION ###
     def setGoal(self):
         self.currentlySettingGoal = not self.currentlySettingGoal
         rowNumber = 9999
+        goalSetFlag = 0
 
         if(self.currentlySettingGoal):
             self.goalToTrack = self.selectedGoal.get()
@@ -154,6 +219,8 @@ class GoalsFrameSetGoal(tk.Frame):
 
             print("Setting goal for:", self.goalToTrack)
             print("Time goal:", self.goalTimeDuration)
+            # TODO: Check if the line below is correct... ?  I feel like I possibly need to change text and add
+            # a call to setgoal()??
             self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
 
             goalExistsInDatabase = doesTimeTagExist(self.goalToTrack)
@@ -162,67 +229,35 @@ class GoalsFrameSetGoal(tk.Frame):
                 if rowNumber != 9999:
                     print("We found the rownumber: " + str(rowNumber))
                     #hasAGoalAlreadyBeenSet = self.doesThisTimeTagAlreadyHaveAGoal(self, rowNumber)
-                    #NOW CALL THE NEXT FUNCTION
                 else:
                     print("We did not find the row nubmer.")
             else:
-                self.setGoal # Might not be the right move to call this again here?
+                self.setGoal() # Might not be the right move to call this again here?
 
-            hasAGoalAlreadyBeenSet = self.doesThisTimeTagAlreadyHaveAGoal(rowNumber)
+            hasAGoalAlreadyBeenSet = doesThisTimeTagAlreadyHaveAGoal(rowNumber)
             if hasAGoalAlreadyBeenSet == False:
                 print("Goal has not already been set.  We need to set this goal.")
             else:
+                goalSetFlag = 1
                 print("Goal already set, go back to set a new goal.")
+                self.setGoal()
 
-            goalStatusSet = self.changeGoalStatusToSet(rowNumber)
-            if goalStatusSet:
-                print("Confirmed, goal status set in database.")
+            if goalSetFlag == 0: # ONLY DO THE STUFF BELOW IF GOAL HAS NOT BEEN SET YET
 
-            hasMyGoalBeenReached = checkIfGoalHasBeenReached(rowNumber)
-            #print("value of hasmygoalbeenreached: " + hasMyGoalBeenReached)
-            if (hasMyGoalBeenReached):
-                print("You've reached your goal.")
+                goalStatusSet = self.changeGoalStatusToSet(rowNumber)
+                if goalStatusSet:
+                    print("Confirmed, goal status set in database.")
 
-        else:
-            self.setGoalButton.config(text = "Confirm Goal") #change button label
+                hasMyGoalBeenReached = checkIfGoalHasBeenReached(rowNumber)
+                if (hasMyGoalBeenReached):
+                    print("You've reached your goal.")
 
+            # TODO: ADD ANOTHER CALL TO setGoal() HERE ? 
 
-    # ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
-    # def doesTimeTagExist(self):
-    #     print("Checking if the timeTag exists in the database")
-    #     with open('timeDatabase.csv', mode='r') as timeDatabase:
-    #         csvReader = csv.reader(timeDatabase)
-    #         print("Opened timeDatabase.csv")
-    #         for row in csvReader:
-    #             if row[0] == self.goalToTrack:
-    #                 print("Goal found in database")
-    #                 return True
-    #         print("Goal not found in database") # All rows searched, goal not found.
-    #         return False
+            else:
+                self.setGoalButton.config(text = "Confirm Goal") #change button label
 
 
-    ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
-    def doesThisTimeTagAlreadyHaveAGoal(self, rowNumber):
-        #rowNumber = rowNumber
-        columnNumber = 4
-        print("Checking if a goal has already been set for this timeTag.")
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            print("Opened timeDatabase.csv")
-            for index, row in enumerate(csvReader):
-                if index == rowNumber:
-                    if row[columnNumber] == "0":
-                        print("Goal has NOT been set.")
-                        print("rownumber: " + str(rowNumber))
-                        print("colnumber: " + str(columnNumber))
-                        return False
-                    else:
-                        print("Goal has been set already.")
-                        print("rownumber: " + str(rowNumber))
-                        print("colnumber: " + str(columnNumber))
-                        return True
-                    
-    
     ### CHANGE GOAL STATUS FROM UNSET TO SET ###
     def changeGoalStatusToSet(self, rowNumber):
         columnNumber = 4
@@ -232,7 +267,7 @@ class GoalsFrameSetGoal(tk.Frame):
             csvReader = csv.reader(timeDatabase)
             print("Opened timeDatabase.csv")
             for index, row in enumerate(csvReader):
-                if index == rowNumber:
+                if (index == rowNumber and row[columnNumber] == "0"):
                     row[columnNumber] = "1"
                     print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
                     #return True
