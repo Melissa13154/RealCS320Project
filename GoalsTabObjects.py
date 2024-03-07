@@ -105,21 +105,56 @@ def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
 def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
     columnNumber = 3
     rows = []
-    print("Changing goal set Boolean within Database")
+    print("Changing goal set time within Database")
     with open('timeDatabase.csv', mode='r+') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
+            #if (index == rowNumber):
             if (index == rowNumber and row[columnNumber] == "0"):
                 row[columnNumber] = goalTimeDuration
                 returnStatus = 1
                 print("Goal time set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
             rows.append(row)
-
         timeDatabase.seek(0)
         csvWriter = csv.writer(timeDatabase)
         csvWriter.writerows(rows)
     return True
+
+
+### PRINT SPECIFIC ROW OF DATABASE ###
+def printRow(rowNumber):
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for index, row in enumerate(csvReader):
+            if index == rowNumber:
+                entireRow = tuple(row)
+                print(entireRow)
+
+
+### COUNT TIMETAGS BEING TRACKED IN DATABASE ###
+def countTimeTagsInDatabase():
+    rowCount = 0
+    with open('timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for row in enumerate(csvReader):
+            rowCount+=1
+    rowCount-=1 # To subtract column headers off database
+    return rowCount
+
+
+### ENTER NEW TUPLE IN DATABASE ###
+def enterNewTupleInDatabase(timeTag):
+    newEntry = [timeTag,0,0,0,0]
+    try:
+        with open('timeDatabase.csv', mode='a') as timeDatabase:
+            csvWriter = csv.writer(timeDatabase)
+            csvWriter.writerow(newEntry)
+        return True
+    except Exception as e:
+            print(f"Error writing tuple to Database:{e}")
+            return False
+
 
 ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
 def checkIfGoalHasBeenReached(rowNumber):

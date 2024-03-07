@@ -2,6 +2,8 @@ from GoalsTabObjects import findRow
 from GoalsTabObjects import returnCurrentStoredTime
 from GoalsTabObjects import calculateUpdatedStoredTime
 from GoalsTabObjects import updateStoredTimeInDatabase
+from GoalsTabObjects import countTimeTagsInDatabase
+from GoalsTabObjects import enterNewTupleInDatabase
 
 ### VARIABLES ###
 goal = "walk"
@@ -22,6 +24,16 @@ print("Updated time value: " + str(updatedTime))
 updateStatus = updateStoredTimeInDatabase(rowNumber, updatedTime)
 if updateStatus:
     print("Update successful.")
+
+### COUNT TIMETAGS IN DATABASE
+numberOfGoals = countTimeTagsInDatabase()
+print("Number of goals in database: " + str(numberOfGoals))
+
+### ENTER NEW TUPLE IN DATABASE
+timeTag = "rock this week"
+entryStatus = enterNewTupleInDatabase(timeTag)
+if entryStatus:
+    print("Database entry successful.")
 
 
 
