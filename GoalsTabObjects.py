@@ -82,7 +82,7 @@ def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
 
 ### HAS GOAL ALREADY BEEN SET FOR THIS TIMETAG FUNCTION ###
 def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
-    columnNumber = 4
+    columnNumber = 2
     print("Checking if a goal has already been set for this timeTag.")
     with open('timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
@@ -99,28 +99,72 @@ def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
                     print("rownumber: " + str(rowNumber))
                     print("colnumber: " + str(columnNumber))
                     return True
+                
 
+### SET GOAL TIME IN DATABASE ###
+def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
+    columnNumber = 3
+    rows = []
+    print("Changing goal set Boolean within Database")
+    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        for index, row in enumerate(csvReader):
+            if (index == rowNumber and row[columnNumber] == "0"):
+                row[columnNumber] = goalTimeDuration
+                returnStatus = 1
+                print("Goal time set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
+            rows.append(row)
+
+        timeDatabase.seek(0)
+        csvWriter = csv.writer(timeDatabase)
+        csvWriter.writerows(rows)
+    return True
 
 ### CHECK IF GOAL HAS BEEN REACHED FUNCTION ###
 def checkIfGoalHasBeenReached(rowNumber):
     totalTimeColumn = 1
-    timeAccumulatedColumn = 4
-    valueInTimeColumn = 0
-    valueInTimeAccumulatedColumn = 0
+    #timeAccumulatedColumn = 4
+    goalTimeColumn = 3
+    #valueInTimeColumn = 0
+    #valueInTimeAccumulatedColumn = 0
     print("Checking if a goal has been reached.")
     with open('timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
             if index == rowNumber:
-                valueInTimeColumn = int(row[totalTimeColumn])
-                valueInTimeAccumulatedColumn = int(row[timeAccumulatedColumn])
-                if ((valueInTimeAccumulatedColumn >= valueInTimeColumn) and (valueInTimeColumn != 0) and (valueInTimeAccumulatedColumn != 0)):
+                valueInTimeColumn = float(row[totalTimeColumn])
+                valueInGoalTimeColumn = float(row[goalTimeColumn])
+                if ((valueInTimeColumn >= valueInGoalTimeColumn) and (valueInTimeColumn != 0) and (valueInGoalTimeColumn != 0)):
                     print("You have achieved your goal.")
                     return True
                 else:
                     print("You have not achieved your goal yet.  Keep at it.")
                     return False
+                
+
+### CHANGE GOAL STATUS FROM UNSET TO SET ###
+def changeGoalStatusToSet(rowNumber):
+    columnNumber = 2
+    rows = []
+    returnStatus = 0
+    print("Changing goal set Boolean within Database")
+    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        print("Opened timeDatabase.csv")
+        for index, row in enumerate(csvReader):
+            if (index == rowNumber and row[columnNumber] == "0"):
+                row[columnNumber] = "1"
+                returnStatus = 1
+                print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
+            rows.append(row)
+
+        timeDatabase.seek(0)
+        csvWriter = csv.writer(timeDatabase)
+        csvWriter.writerows(rows)
+    return returnStatus
+
 
 ### GOALSFRAMESETUP CLASS ###
 class GoalsFrameSetup(tk.Frame):
@@ -244,9 +288,13 @@ class GoalsFrameSetGoal(tk.Frame):
 
             if goalSetFlag == 0: # ONLY DO THE STUFF BELOW IF GOAL HAS NOT BEEN SET YET
 
-                goalStatusSet = self.changeGoalStatusToSet(rowNumber)
+                goalStatusSet = changeGoalStatusToSet(rowNumber)
                 if goalStatusSet:
                     print("Confirmed, goal status set in database.")
+
+                setGoalTimeInDatabaseStatus = setGoalTimeInDatabase(rowNumber, self.goalTimeDuration)
+                if setGoalTimeInDatabase:
+                    print("Goal time set in database.")
 
                 hasMyGoalBeenReached = checkIfGoalHasBeenReached(rowNumber)
                 if (hasMyGoalBeenReached):
@@ -258,30 +306,31 @@ class GoalsFrameSetGoal(tk.Frame):
                 self.setGoalButton.config(text = "Confirm Goal") #change button label
 
 
-    ### CHANGE GOAL STATUS FROM UNSET TO SET ###
-    def changeGoalStatusToSet(self, rowNumber):
-        columnNumber = 4
-        rows = []
-        print("Changing goal set Boolean within Database")
-        with open('timeDatabase.csv', mode='r+') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            print("Opened timeDatabase.csv")
-            for index, row in enumerate(csvReader):
-                if (index == rowNumber and row[columnNumber] == "0"):
-                    row[columnNumber] = "1"
-                    print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
-                    #return True
-                rows.append(row)
+    # ### CHANGE GOAL STATUS FROM UNSET TO SET ###
+    # def changeGoalStatusToSet(self, rowNumber):
+    #     columnNumber = 2
+    #     rows = []
+    #     returnStatus = 0
+    #     print("Changing goal set Boolean within Database")
+    #     with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    #         csvReader = csv.reader(timeDatabase)
+    #         print("Opened timeDatabase.csv")
+    #         for index, row in enumerate(csvReader):
+    #             if (index == rowNumber and row[columnNumber] == "0"):
+    #                 row[columnNumber] = "1"
+    #                 returnStatus = 1
+    #                 print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
+    #             rows.append(row)
 
-            timeDatabase.seek(0)
-            csvWriter = csv.writer(timeDatabase)
-            csvWriter.writerows(rows)
-        return True
+    #         timeDatabase.seek(0)
+    #         csvWriter = csv.writer(timeDatabase)
+    #         csvWriter.writerows(rows)
+    #     return returnStatus
 
 
     ### CHANGE GOAL REACHED STATUS FROM UNREACHED TO GOAL REACHED ###
     def changeGoalReachedStatus(self, rowNumber):
-        columnNumber = 7
+        columnNumber = 4
         rows = []
         print("Changing goal set Boolean within Database")
         with open('timeDatabase.csv', mode='r+') as timeDatabase:
@@ -291,7 +340,6 @@ class GoalsFrameSetGoal(tk.Frame):
                 if index == rowNumber:
                     row[columnNumber] = "1"
                     print("Goal reached at row number " + str(rowNumber) + " and column number " + str(columnNumber))
-                    #return True
                 rows.append(row)
 
             timeDatabase.seek(0)
