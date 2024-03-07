@@ -1,7 +1,7 @@
-timeTag,startTime,stopTime,totalTime,goalSetBool,goalTime,timeAccumulatedSoFar,goalMetBool
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
+timeTag,totalTime,goalSetBool,goalTime,timeAccumulatedSoFar,goalMetBool
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
