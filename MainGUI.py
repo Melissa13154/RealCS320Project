@@ -47,7 +47,7 @@ class OuterFrame:
 def initialize():
 
 ### TIMETAGS VARIABLES ###
-    timeDatabase = 'timeDatabaseEMPTY.csv'
+    timeDatabase = 'timeDatabase.csv'
     timeTagOptions = []
 
     ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
@@ -72,7 +72,7 @@ def main():
     timeTagOptions = initialize()
 
     outerFrame = OuterFrame()
-    # ### TIMETAGS VARIABLES ###
+    # # ### TIMETAGS VARIABLES ###
     # timeDatabase = 'timeDatabase.csv'
     # timeTagOptions = []
 
