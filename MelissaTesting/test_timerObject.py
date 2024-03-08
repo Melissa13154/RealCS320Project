@@ -2,20 +2,22 @@ import TimerObject
 import GoalsTabObjects
 import tkinter as tk
 
+timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+
 #Acceptance test
 def test_generateStr_positive():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
     print(timer.generateString(1000))
 
 #Acceptance test
 def test_generateStr_negative():
-    timer2 = TimerObject.TimerFrame(tk.Tk(), ["walk"])
-    print(timer2.generateString(-10))
+    # timer2 = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    print(timer.generateString(-10))
 
 #Acceptance test
 def test_generateStr_large():
-    timer3 = TimerObject.TimerFrame(tk.Tk(), ["walk"])
-    print(timer3.generateString(10000000))
+    # timer3 = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    print(timer.generateString(10000000))
 
 
 #-----------------------------------------------------------------------------------------
@@ -52,14 +54,14 @@ def test_storedTime_not():
 
 #checks if updateTimes() is storing the correct value in the accumulatedTime attribute
 def test_countUp():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
     timer.selectedGoal = "walk"
     timer.updateTimes(5)
     assert timer.accumulatedTime == 25
 
 #checks if the function is returning different things
 def test_countUp_not():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
     timer.selectedGoal = "walk"
     timer.updateTimes(10)
     assert not timer.accumulatedTime == 25
@@ -73,14 +75,14 @@ def test_countUp_not():
 #attributes specified in timer.
 
 def test_pushValuetoCsv():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
     timer.selectedGoal = "walk"
     row = GoalsTabObjects.findRow(timer.selectedGoal)
     GoalsTabObjects.updateStoredTimeInDatabase(row, 17)
     assert GoalsTabObjects.returnCurrentStoredTime(row) == 17
 
 def test_pushValuetoCsv_not():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["walk"])
     timer.selectedGoal = "walk"
     row = GoalsTabObjects.findRow(timer.selectedGoal)
     GoalsTabObjects.updateStoredTimeInDatabase(row, 20)
@@ -104,28 +106,28 @@ def test_pushValuetoCsv_not():
 
 #Check if stage 1 of changeImage works
 def test_changeImage_Stage1():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
     timer.currentGoal = 100
     timer.changeImage(0)
     assert timer.imageIndex == 0
 
 #Check if stage 2 of changeImage works
 def test_changeImage_Stage2():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
     timer.currentGoal = 100
     timer.changeImage(25)
     assert timer.imageIndex == 1
 
 #check if stage 3 of changeImage works
 def test_changeImage_Stage3():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
     timer.currentGoal = 100
     timer.changeImage(50)
     assert timer.imageIndex == 2
 
 #check if stage 4 of changeImage works
 def test_changeImage_Stage4():
-    timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
+    # timer = TimerObject.TimerFrame(tk.Tk(), ["read for fun"])
     timer.currentGoal = 100
     timer.changeImage(75)
     assert timer.imageIndex == 3
