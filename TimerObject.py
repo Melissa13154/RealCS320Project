@@ -6,7 +6,33 @@ from tkinter import Canvas
 from tkinter import PhotoImage
 import csv
 
+import GoalsTabObjects
+
 #IDEA: Open associated application with menu button
+
+def doesTimeTagExist(selectedGoal):
+    # print("Checking if the timeTag exists in the database")
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        # print("Opened timeDatabase.csv")
+        for row in csvReader:
+            if row[0] == selectedGoal:
+                print("Goal found in database")
+                return True
+        print("Goal not found in database") # All rows searched, goal not found.
+        return False
+    
+#---------------------------------------------------------------------------
+
+def currentStoredTime(goalToTrack):
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        for row in csvReader:
+            if row[0] == goalToTrack:
+                currentStoredTime = row[3]
+                print("Current stored time: " + currentStoredTime)
+                return float(currentStoredTime)   
+
 
 backgroundColor = "#87ccab"
 IMAGE = 'ClockResized.gif'
@@ -23,9 +49,10 @@ class TimerFrame(tk.Frame):
         self.photo2 = PhotoImage(file='DynamicImageDrafts/ImageSet1/Stage2.png')
         self.photo3 = PhotoImage(file='DynamicImageDrafts/ImageSet1/Stage3.png')
         self.photo4 = PhotoImage(file='DynamicImageDrafts/ImageSet1/Stage4.png')
-        self.imageSet1 = [self.photo1, self.photo2, self.photo3, self.photo4]
+        self.ImageSet = [self.photo1, self.photo2, self.photo3, self.photo4]
+        self.imageIndex = 0
 
-        self.imageNum = self.canvas.create_image((0, 0), anchor='nw',image=self.photo1)
+        self.imageNum = self.canvas.create_image((0, 0), anchor='nw',image=self.ImageSet[self.imageIndex])
 
         self.timeTagOptions = timeTagOptions
         self.currentlyRunning = False
@@ -40,7 +67,8 @@ class TimerFrame(tk.Frame):
         self.goalDropdownMenu.config(bg='#FFD9B7')
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
-        self.currentGoal = 0.00
+        self.currentGoal = -1.00
+        self.accumulatedTime = -1.00
 
         self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
@@ -57,11 +85,11 @@ class TimerFrame(tk.Frame):
         if(self.currentlyRunning):
             self.goalToTrack = self.selectedGoal.get()
 
-            self.currentGoal = self.currentStoredTime(self.goalToTrack)
+            self.currentGoal = currentStoredTime(self.goalToTrack)
 
-            if(self.doesTimeTagExist() == False or self.currentGoal <= 0.00):
+            if(doesTimeTagExist(self.goalToTrack) == False):
                 self.currentlyRunning = not self.currentlyRunning
-                self.currentGoal = -1.0
+                self.currentGoal = 0.0
                 return
     
 
@@ -73,7 +101,9 @@ class TimerFrame(tk.Frame):
             self.button.config(text = "Start") #change button label
             # threading.Thread(target=self.countUp).join() #wait for thread to kill
             self.replaceWidgets()
+            print(self.label.winfo_ismapped())
 
+#------------------------------------------------------------------------------------------
 
     def removeWidgets(self):
         self.goalDropdownMenu.place_forget()
@@ -90,22 +120,17 @@ class TimerFrame(tk.Frame):
 #-------------------------------------------------------------------------------------------
             
     def changeImage(self, timePassed):
-        if(timePassed/self.currentGoal > 1.00):
-            self.canvas.itemconfig(self.imageNum, image=self.photo4)
-            return 4
-        elif(timePassed/self.currentGoal > 0.50):
-            self.canvas.itemconfig(self.imageNum, image=self.photo3)
-            return 3
-        elif(timePassed/self.currentGoal > 0.25):
-            self.canvas.itemconfig(self.imageNum, image=self.photo2)
-            return 2
-        elif(timePassed/self.currentGoal >= 0.00):
-            self.canvas.itemconfig(self.imageNum, image=self.photo1)
-            return 1
+        if(timePassed/self.currentGoal >= 0.75):
+            self.imageIndex = 3
+        elif(timePassed/self.currentGoal >= 0.50):
+            self.imageIndex = 2
+        elif(timePassed/self.currentGoal >= 0.25):
+            self.imageIndex = 1
         else:
-            return -1
+            self.imageIndex = 0
 
-#----------------------------------------------------------------------------------------------------
+        self.canvas.itemconfig(self.imageNum, image=self.ImageSet[self.imageIndex])
+        
 
     def generateString(self, newCurrentTime):
         currentSecond = newCurrentTime % 60
@@ -121,33 +146,17 @@ class TimerFrame(tk.Frame):
         while self.currentlyRunning:
             timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
             self.timerLabel.config(text = self.generateString(timePassed))
-            self.changeImage(timePassed)
+            self.changeImage(timePassed + self.accumulatedTime)
 
             time.sleep(0.001)
 
         self.timerLabel.config(text = self.generateString(0.0))
+        self.changeImage(0)
+        self.updateTimes(timePassed)
 
-#------------------------------------------------------------------------------------
 
-    def doesTimeTagExist(self):
-        # print("Checking if the timeTag exists in the database")
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            # print("Opened timeDatabase.csv")
-            for row in csvReader:
-                if row[0] == self.selectedGoal.get():
-                    print("Goal found in database")
-                    return True
-            print("Goal not found in database") # All rows searched, goal not found.
-            return False
-    
-#---------------------------------------------------------------------------
-
-    def currentStoredTime(self, goalToTrack):
-        with open('timeDatabase.csv', mode='r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            for row in csvReader:
-                if row[0] == goalToTrack:
-                    currentStoredTime = row[1]
-                    print("Current stored time: " + currentStoredTime)
-                    return float(currentStoredTime)
+    def updateTimes(self, timePassed):
+        row = GoalsTabObjects.findRow(self.selectedGoal)
+        oldTime = GoalsTabObjects.returnCurrentStoredTime(row)
+        self.accumulatedTime = GoalsTabObjects.calculateUpdatedStoredTime(oldTime, timePassed)
+        GoalsTabObjects.updateStoredTimeInDatabase(row, self.accumulatedTime)

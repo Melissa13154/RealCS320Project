@@ -14,7 +14,7 @@ def checkIfGoalsListIsEmpty(timeTagOptions):
 ### DOES TIMETAG EXIST IN DATABASE FUNCTION ###
 def doesTimeTagExist(goalToTrack):
     print("Checking if the timeTag exists in the database")
-    with open('timeDatabase.csv', mode='r') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for row in csvReader:
@@ -28,7 +28,7 @@ def doesTimeTagExist(goalToTrack):
 ### FIND GOAL ROW IN DATABASE ###
 def findRow(goalToTrack):
     print("Entered the findRow function.")
-    with open('timeDatabase.csv', mode='r') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         rowNumber = 0
@@ -44,7 +44,7 @@ def findRow(goalToTrack):
 ### RETURN CURRENT STORED TIME ###
 def returnCurrentStoredTime(rowNumber):
     columnNumber = 1
-    with open('timeDatabase.csv', mode='r') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         for index, row in enumerate(csvReader):
             if index == rowNumber:
@@ -65,7 +65,7 @@ def calculateUpdatedStoredTime(currentStoredTime, newlyTrackedTimeBlock):
 def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
     columnNumber = 1
     rows = []
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         for index, row in enumerate(csvReader):
             if index == rowNumber:
@@ -84,7 +84,7 @@ def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
 def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
     columnNumber = 2
     print("Checking if a goal has already been set for this timeTag.")
-    with open('timeDatabase.csv', mode='r') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
@@ -106,7 +106,7 @@ def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
     columnNumber = 3
     rows = []
     print("Changing goal set Boolean within Database")
-    with open('timeDatabase.csv', mode='r+', newline="") as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
@@ -129,7 +129,7 @@ def checkIfGoalHasBeenReached(rowNumber):
     #valueInTimeColumn = 0
     #valueInTimeAccumulatedColumn = 0
     print("Checking if a goal has been reached.")
-    with open('timeDatabase.csv', mode='r') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
@@ -150,7 +150,7 @@ def changeGoalStatusToSet(rowNumber):
     rows = []
     returnStatus = 0
     print("Changing goal set Boolean within Database")
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('csvFiles/timeDatabase.csv', mode='r+') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
@@ -171,7 +171,7 @@ class GoalsFrameSetup(tk.Frame):
     def __init__(self, root, timeTagOptions):
         self.root = root
         self.timeTagOptions = timeTagOptions
-        self.image = Image.open("graphPaper.jpg")
+        self.image = Image.open("Images/graphPaper.jpg")
         self.photo_image = ImageTk.PhotoImage(self.image)
 
         background_label = ttk.Label(root, image=self.photo_image)
@@ -333,7 +333,7 @@ class GoalsFrameSetGoal(tk.Frame):
         columnNumber = 4
         rows = []
         print("Changing goal set Boolean within Database")
-        with open('timeDatabase.csv', mode='r+') as timeDatabase:
+        with open('csvFiles/timeDatabase.csv', mode='r+') as timeDatabase:
             csvReader = csv.reader(timeDatabase)
             print("Opened timeDatabase.csv")
             for index, row in enumerate(csvReader):
@@ -347,12 +347,10 @@ class GoalsFrameSetGoal(tk.Frame):
             csvWriter.writerows(rows)       
         return True
 
-
     ### PRINT GOAL IN TERMINAL (for debugging purposes) ###
     def printSelectedGoal(self):
         self.printThis = self.selectedGoal.get()
         print("You're setting a goal for:", self.printThis)
-
 
     ### PRINT GOAL ON GUI (for debugging purposes ###)
     def printSelectedGoalOnGUI(self):
