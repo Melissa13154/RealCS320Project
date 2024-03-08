@@ -95,7 +95,7 @@ def main():
     mainFrame = TimerObject.TimerFrame(outerFrame.mainTab, timeTagOptions)
 
     #tagsTab
-    tagBtn = TimerTags.CreateTags(outerFrame.tagsTab, timerDB)
+    TimerTags.taginit(outerFrame.tagsTab, timerDB)
 
     #goalsTab
     goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab ,timeTagOptions)
