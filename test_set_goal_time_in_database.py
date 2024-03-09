@@ -6,6 +6,15 @@ def test_set_goal_time_in_database():
     goalTimeDuration = 10
 
     printRow(rowNumber)
-    setGoalTimeInDatabase(rowNumber, goalTimeDuration)
+    assert setGoalTimeInDatabase(rowNumber, goalTimeDuration)
     printRow(rowNumber)
+
+def test_set_goal_time_in_database_already_set():
+    rowNumber = 5
+    goalTimeDuration = 10
+
+    printRow(rowNumber)
+    assert not setGoalTimeInDatabase(rowNumber, goalTimeDuration)
+    printRow(rowNumber)
+    
 

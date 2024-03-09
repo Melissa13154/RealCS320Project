@@ -105,7 +105,8 @@ def doesThisTimeTagAlreadyHaveAGoal(rowNumber):
 def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
     columnNumber = 3
     rows = []
-    print("Changing goal set time within Database")
+    returnStatus = False
+    print("Attempting to set time within Database")
     with open('timeDatabase.csv', mode='r+') as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
@@ -113,13 +114,15 @@ def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
             #if (index == rowNumber):
             if (index == rowNumber and row[columnNumber] == "0"):
                 row[columnNumber] = goalTimeDuration
-                returnStatus = 1
+                returnStatus = True
                 print("Goal time set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
             rows.append(row)
         timeDatabase.seek(0)
         csvWriter = csv.writer(timeDatabase)
         csvWriter.writerows(rows)
-    return True
+    if not returnStatus:
+        print("Goal time already set, and therefore, no changes made.")
+    return returnStatus
 
 
 ### PRINT SPECIFIC ROW OF DATABASE ###
@@ -207,7 +210,6 @@ def changeGoalStatusToSet(rowNumber):
                 returnStatus = 1
                 print("Goal set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
             rows.append(row)
-
         timeDatabase.seek(0)
         csvWriter = csv.writer(timeDatabase)
         csvWriter.writerows(rows)

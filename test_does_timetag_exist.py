@@ -5,5 +5,5 @@ def test_does_timetag_exist_exists():
     assert doesTimeTagExist(goalToTrack1)
 
 def test_does_timetag_exist_doesnotexist():
-    goalToTrack2 = "work on testing suite"
+    goalToTrack2 = "climb a mountain"
     assert not doesTimeTagExist(goalToTrack2)
