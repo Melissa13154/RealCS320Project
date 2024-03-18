@@ -3,7 +3,8 @@
 *.exe
 *.pyc
 bin/*
-Images/*
+Images/
+.vscode/
 
 # Pyhon byte-compiled / optimized files
 __pycache__/
