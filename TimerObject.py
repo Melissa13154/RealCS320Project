@@ -9,7 +9,7 @@ from tkinter.ttk import Notebook, Style
 #IDEA: Open associated application with menu button
 
 backgroundColor = "#87ccab"
-IMAGE = 'ClockResized.gif'
+IMAGE = 'Clock.gif'
 
 class TimerFrame(tk.Frame):
     #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
@@ -103,5 +103,3 @@ class TimerFrame(tk.Frame):
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center") 
         self.label.place(relx=.5, rely=.1, anchor="center")
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
-
-
