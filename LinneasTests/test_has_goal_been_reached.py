@@ -9,6 +9,6 @@ def test_has_goal_been_reached_yes():
     assert checkIfGoalHasBeenReached(rowNumber)
 
 def test_has_goal_been_reached_notyet():
-    rowNumber = 6
+    rowNumber = 4
     assert not checkIfGoalHasBeenReached(rowNumber)
 
