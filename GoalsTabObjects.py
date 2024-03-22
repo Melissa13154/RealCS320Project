@@ -315,7 +315,8 @@ class GoalsFrameSetGoal(tk.Frame):
             print("Time goal:", self.goalTimeDuration)
             # TODO: Check if the line below is correct... ?  I feel like I possibly need to change text and add
             # a call to setgoal()??
-            self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
+            # TODO: 22MAR24 Commenting the below line out. Trying to fix flow loop.
+            #self.setGoalButton.config(text = "Refresh and Set a New Goal") #change button label
 
             goalExistsInDatabase = doesTimeTagExist(self.goalToTrack)
             if goalExistsInDatabase:
@@ -350,7 +351,9 @@ class GoalsFrameSetGoal(tk.Frame):
                 if (hasMyGoalBeenReached):
                     print("You've reached your goal.")
 
-            # TODO: ADD ANOTHER CALL TO setGoal() HERE ? 
+                # TODO: ADD ANOTHER CALL TO setGoal() HERE ? 
+                ### ADDING THIS TO TRY AND CORRECT CLICK LOOP
+                self.setGoal()
 
             else:
                 self.setGoalButton.config(text = "Confirm Goal") #change button label
