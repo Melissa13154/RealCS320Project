@@ -8,6 +8,7 @@ import csv
 import TimerObject
 import TimerTags
 import GoalsTabObjects
+import GoalsProgressObjects
 import databaseInit
 
 ### DETAILS ###
@@ -31,11 +32,13 @@ class OuterFrame:
     mainTab = ttk.Frame(notebook, style='new.TFrame')
     tagsTab = ttk.Frame(notebook)
     goalsTab = ttk.Frame(notebook)
+    goalsProgressTab = ttk.Frame(notebook)
 
     ### POPULATE NOTEBOOK WITH TABS ###
     notebook.add(mainTab, text = "Main Menu")
     notebook.add(tagsTab, text = "Tags Menu")
-    notebook.add(goalsTab, text = "Goal Dashboard")
+    notebook.add(goalsTab, text = "Set a Goal")
+    notebook.add(goalsProgressTab, text = "Goal Progress")
     notebook.pack(expand = 1, fill = 'both')
 
     # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
@@ -98,8 +101,11 @@ def main():
     #TimerTags.taginit(outerFrame.tagsTab, timerDB)
 
     #goalsTab
-    goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab ,timeTagOptions)
+    goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab, timeTagOptions)
     setGoal = GoalsTabObjects.GoalsFrameSetGoal(outerFrame.goalsTab, timeTagOptions)
+
+    #goalsProgressTab
+    goalProgressFrame = GoalsProgressObjects.GoalsProgressFrameSetup(outerFrame.goalsProgressTab, timeTagOptions)
 
     ### MAINLOOP CALL ###
     outerFrame.root.mainloop()

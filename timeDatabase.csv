@@ -1,7 +1,7 @@
 timeTag,totalTime,goalSetBool,goalTime,goalMetBool
 read for fun,0,0,0,0
 databases hw,10,1,30,0
-walk,90.0,0,0,0
+walk,90.0,1,45,0
 study haskell,0,0,0,0
 work on rpn assignment,0,0,0,0
 Workout,20,1,15,0
