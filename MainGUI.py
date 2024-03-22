@@ -41,7 +41,7 @@ class OuterFrame:
     # TODO: Add more widgets here : https://docs.python.org/3/library/tkinter.ttk.html
 
 ### CREATE DATABASE ONCE ###
-#timerDB = databaseInit.DB()
+# timerDB = databaseInit.DB()
     
 ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
 def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
@@ -75,8 +75,7 @@ def main():
 
     #mTabs
     mainFrame = TimerObject.TimerFrame(outerFrame.mainTab, timeTagOptions)
-    tagBtn = TimerTags.CreateTags(outerFrame.tagsTab)
-    #DBconnection, DBcur = timerDB.getConnectionInfo()
+    # TimerTags.taginit(outerFrame.tagsTab, timerDB)
     goalFrame = GoalsTabObjects.GoalsFrameSetup(outerFrame.goalsTab ,timeTagOptions)
     setGoal = GoalsTabObjects.GoalsFrameSetGoal(outerFrame.goalsTab, timeTagOptions)
 

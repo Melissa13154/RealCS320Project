@@ -142,6 +142,7 @@ class TimerFrame(tk.Frame):
 
     def countUp(self):
         startTime = time.time() #grabs the current time in seconds
+        timePassed = 0
 
         while self.currentlyRunning:
             timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
