@@ -53,6 +53,7 @@ def returnCurrentStoredTime(rowNumber):
                 print("rownumber: " + str(rowNumber))
                 print("colnumber: " + str(columnNumber))
                 return float(currentStoredTime)
+            
 
 
 ### CALCULATE UPDATED STORED TIME ###
@@ -111,9 +112,9 @@ def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
-            #if (index == rowNumber):
             if (index == rowNumber and row[columnNumber] == "0"):
                 row[columnNumber] = goalTimeDuration
+                row[2] = 1
                 returnStatus = True
                 print("Goal time set at row number " + str(rowNumber) + " and column number " + str(columnNumber))
             rows.append(row)

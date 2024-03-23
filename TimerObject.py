@@ -5,37 +5,30 @@ import threading
 from tkinter import Canvas
 from tkinter import PhotoImage
 import csv
+import pandas as pd
 
 import GoalsTabObjects
 
-#IDEA: Open associated application with menu button
-
-def doesTimeTagExist(selectedGoal):
-    # print("Checking if the timeTag exists in the database")
-    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
-        csvReader = csv.reader(timeDatabase)
-        # print("Opened timeDatabase.csv")
-        for row in csvReader:
-            if row[0] == selectedGoal:
-                print("Goal found in database")
-                return True
-        print("Goal not found in database") # All rows searched, goal not found.
-        return False
-    
-#---------------------------------------------------------------------------
-
-def currentStoredTime(goalToTrack):
-    with open('csvFiles/timeDatabase.csv', mode='r') as timeDatabase:
-        csvReader = csv.reader(timeDatabase)
-        for row in csvReader:
-            if row[0] == goalToTrack:
-                currentStoredTime = row[3]
-                print("Current stored time: " + currentStoredTime)
-                return float(currentStoredTime)   
-
+#IDEA: Open associated application with menu button  
 
 backgroundColor = "#87ccab"
 IMAGE = 'ClockResized.gif'
+
+
+#uses pandas package to check if a goal has been set or not
+def isGoalSet(selectedGoal):
+    data = pd.read_csv('timeDatabase.csv') #read in csv file into dataframe
+    notSet = data[data['goalSetBool'] == 0] #grab all rows where values is 0
+
+    if((notSet['timeTag'] == selectedGoal).any()):
+        print("false")
+        return False
+    
+    print("true")
+    return True
+
+
+
 
 class TimerFrame(tk.Frame):
     #Tutorial referenced: https://www.youtube.com/watch?v=iP7CaRg9OPA
@@ -68,7 +61,7 @@ class TimerFrame(tk.Frame):
         self.goalDropdownMenu.place(relx=0.5, rely=0.8, anchor = "center")
 
         self.currentGoal = -1.00
-        self.accumulatedTime = -1.00
+        self.currentAccumulatedTime = -1.00
 
         self.button = tk.Button(self.root, text = "Start", width=15, command=self.startStop)
         self.button.place(relx= 0.5, rely = 0.9, anchor='n')
@@ -76,32 +69,55 @@ class TimerFrame(tk.Frame):
         self.label = tk.Label(self.root, text = "Click start to begin", font=('MS Sans Serif', 16), bg= backgroundColor)
         self.label.place(relx=.5, rely=.1, anchor="center")
 
+#---------------------------------------------------------------------------
+
+    def changeStates(self):
+        self.currentlyRunning = not self.currentlyRunning
+
+
+#-------------------------------------------------------------------------
+        
+    def isValid(self):
+        self.goalToTrack = self.selectedGoal.get() #convert the current goal label selected to a string
+        print(self.currentGoal)
+
+        if(GoalsTabObjects.doesTimeTagExist(self.goalToTrack) == False or isGoalSet(self.goalToTrack) == False):
+            self.changeStates()
+            self.currentGoal = -1.0
+            print("Tag doesnt exist")
+            return False
+        
+        rowNumber = GoalsTabObjects.findRow(self.goalToTrack)
+        self.currentGoal = GoalsTabObjects.returnCurrentStoredTime(rowNumber) #get the current goal value in csv
+        self.currentAccumulatedTime = GoalsTabObjects.returnCurrentStoredTime(rowNumber)
+        
+        return True
+
+#-----------------------------------------------------------------------------------
+    
+    def startTimer(self):
+        print(f"Goal selected: {self.goalToTrack}")
+        self.button.config(text = "Stop") #change button label
+        self.removeWidgets() #clean up the screen
+        thread = threading.Thread(target=self.countUp) #start new thread to count
+        thread.start()
+
+
 #--------------------------------------------------------------------------------------------------  
 
     def startStop(self):
+
+        self.changeStates() #i know this is weird but for some reason its the only way to get the states to change correctly
         
-        self.currentlyRunning = not self.currentlyRunning
-
-        if(self.currentlyRunning):
-            self.goalToTrack = self.selectedGoal.get()
-
-            self.currentGoal = currentStoredTime(self.goalToTrack)
-
-            if(doesTimeTagExist(self.goalToTrack) == False):
-                self.currentlyRunning = not self.currentlyRunning
-                self.currentGoal = 0.0
-                return
-    
-
-            print(f"Goal selected: {self.goalToTrack}")
-            self.button.config(text = "Stop") #change button label
-            self.removeWidgets()
-            threading.Thread(target=self.countUp).start() #start new thread to count
+        if self.currentlyRunning:
+            if(self.isValid()):
+                self.startTimer()
         else:
+            self.timerLabel.config(text = self.generateString(0.0))
+            self.changeImage(0.01)
+
             self.button.config(text = "Start") #change button label
-            # threading.Thread(target=self.countUp).join() #wait for thread to kill
             self.replaceWidgets()
-            print(self.label.winfo_ismapped())
 
 #------------------------------------------------------------------------------------------
 
@@ -131,6 +147,7 @@ class TimerFrame(tk.Frame):
 
         self.canvas.itemconfig(self.imageNum, image=self.ImageSet[self.imageIndex])
         
+#----------------------------------------------------------------
 
     def generateString(self, newCurrentTime):
         currentSecond = newCurrentTime % 60
@@ -147,17 +164,8 @@ class TimerFrame(tk.Frame):
         while self.currentlyRunning:
             timePassed = time.time() - startTime #grabs the new current time, finds the difference since starting
             self.timerLabel.config(text = self.generateString(timePassed))
-            self.changeImage(timePassed + self.accumulatedTime)
-
-            time.sleep(0.001)
-
-        self.timerLabel.config(text = self.generateString(0.0))
-        self.changeImage(0)
-        self.updateTimes(timePassed)
-
-
-    def updateTimes(self, timePassed):
-        row = GoalsTabObjects.findRow(self.selectedGoal)
-        oldTime = GoalsTabObjects.returnCurrentStoredTime(row)
-        self.accumulatedTime = GoalsTabObjects.calculateUpdatedStoredTime(oldTime, timePassed)
-        GoalsTabObjects.updateStoredTimeInDatabase(row, self.accumulatedTime)
+            self.changeImage(timePassed + self.currentAccumulatedTime)
+            time.sleep(1)
+        
+        GoalsTabObjects.calculateUpdatedStoredTime(self.currentAccumulatedTime,timePassed) #update times in database
+        return

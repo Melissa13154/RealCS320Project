@@ -46,26 +46,25 @@ class OuterFrame:
 ### CREATE DATABASE ONCE ###
 #timerDB = databaseInit.DB()
 
+### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
+def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
+    with open (timeDatabase, mode = 'r') as timeDatabase:
+        csvReader = csv.reader(timeDatabase)
+        next(csvReader) # Skip column titles, begin at row below that
+        for row in csvReader:
+            timeTagOptions.append(row[0])
+        print("Finished assembling timeTagOptions list from timeDatabase.")
+        print(f"Contents of list: {timeTagOptions}")
+
+
 ### RUN THIS TO INIITIALIZE ###
 def initialize():
-
-### TIMETAGS VARIABLES ###
+    ### TIMETAGS VARIABLES ###
     timeDatabase = 'timeDatabase.csv'
     timeTagOptions = []
 
-    ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
-    def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
-        with open (timeDatabase, mode = 'r') as timeDatabase:
-            csvReader = csv.reader(timeDatabase)
-            next(csvReader) # Skip column titles, begin at row below that
-            for row in csvReader:
-                timeTagOptions.append(row[0])
-            print("Finished assembling timeTagOptions list from timeDatabase.")
-            print(f"Contents of list: {timeTagOptions}")
-
     ### CREATE TIMETAGS LIST FROM DATABASE ###
     readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
-
     return timeTagOptions
 
 ### MAIN FUNCTION ###
@@ -73,27 +72,7 @@ def main():
     
     ### RUN INITIAIZE FUNCTION, FUNCTION RETURNS THE LIST OF TIMETAG OPTIONS ###
     timeTagOptions = initialize()
-
     outerFrame = OuterFrame()
-    # # ### TIMETAGS VARIABLES ###
-    # timeDatabase = 'timeDatabase.csv'
-    # timeTagOptions = []
-
-    # ### FUNCTION TO READ IN TIMETAGS FROM DATABASE TO CREATE TAGS LIST ###
-    # def readInTimeTagsFromDatabase(timeDatabase, timeTagOptions):
-    #     with open (timeDatabase, mode = 'r') as timeDatabase:
-    #         csvReader = csv.reader(timeDatabase)
-    #         next(csvReader) # Skip column titles, begin at row below that
-    #         for row in csvReader:
-    #             timeTagOptions.append(row[0])
-    #         print("Finished assembling timeTagOptions list from timeDatabase.")
-    #         print(f"Contents of list: {timeTagOptions}")
-
-    # ### CREATE TIMETAGS LIST FROM DATABASE ###
-    # readInTimeTagsFromDatabase(timeDatabase, timeTagOptions)
-
-    # outerFrame = OuterFrame()
-
     #mainTab
     mainFrame = TimerObject.TimerFrame(outerFrame.mainTab, timeTagOptions)
 
@@ -112,4 +91,6 @@ def main():
 
 
 ### CALL MAIN FUNCTION ###
-main()
+    
+if __name__ == "__main__":
+    main()
