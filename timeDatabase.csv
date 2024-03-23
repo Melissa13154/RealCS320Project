@@ -1,5 +1,5 @@
 timeTag,totalTime,goalSetBool,goalTime,goalMetBool
-read for fun,0,0,0,0
+read for fun,10,1,10,0
 databases hw,10,1,30,0
 walk,90.0,1,45,0
 study haskell,0,0,0,0
