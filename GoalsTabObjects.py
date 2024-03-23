@@ -65,7 +65,7 @@ def calculateUpdatedStoredTime(currentStoredTime, newlyTrackedTimeBlock):
 def updateStoredTimeInDatabase(rowNumber, updatedStoredTime):
     columnNumber = 1
     rows = []
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         for index, row in enumerate(csvReader):
             if index == rowNumber:
@@ -107,7 +107,7 @@ def setGoalTimeInDatabase(rowNumber, goalTimeDuration):
     rows = []
     returnStatus = False
     print("Attempting to set time within Database")
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
@@ -201,7 +201,7 @@ def changeGoalStatusToSet(rowNumber):
     rows = []
     returnStatus = 0
     print("Changing goal set Boolean within Database")
-    with open('timeDatabase.csv', mode='r+') as timeDatabase:
+    with open('timeDatabase.csv', mode='r+', newline="") as timeDatabase:
         csvReader = csv.reader(timeDatabase)
         print("Opened timeDatabase.csv")
         for index, row in enumerate(csvReader):
